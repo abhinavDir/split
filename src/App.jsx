@@ -49,6 +49,12 @@ function PublicAuthRoute({ children }) {
   return children;
 }
 
+function NotFoundRedirect() {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  return <Navigate to={user ? "/dashboard" : "/"} replace />;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -107,8 +113,8 @@ export default function App() {
                   <Route path="/join/:groupId" element={<CollabInvitePage />} />
                 </Route>
 
-                {/* Catch-all */}
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                {/* Catch-all: Any unknown or tempered URL redirects to home without showing 404 */}
+                <Route path="*" element={<NotFoundRedirect />} />
               </Routes>
             </ExpenseGroupProvider>
           </NotificationProvider>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useExpenseGroup } from '../context/ExpenseGroupContext';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -191,60 +191,9 @@ export function GroupDetailPage() {
     );
   }
 
-  // Not found fallback
+  // If group is not found or URL was tempered, cleanly redirect to dashboard
   if (!group && notFound) {
-    return (
-      <div
-        style={{
-          backgroundColor: '#070c09',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '20px',
-          textAlign: 'center',
-          padding: '64px 24px',
-        }}
-      >
-        <ShieldAlert size={48} style={{ color: '#f59e0b', margin: '0 auto 16px' }} />
-        <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-          Envelope Not Accessible
-        </h2>
-        <p style={{ color: '#8899a6', fontSize: '14px', maxWidth: '420px', margin: '0 auto 24px' }}>
-          You might not have joined this shared envelope yet, or the invitation has expired.
-        </p>
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-          <button
-            onClick={() => navigate('/dashboard')}
-            style={{
-              padding: '10px 20px',
-              borderRadius: '9999px',
-              backgroundColor: '#0c1410',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#ffffff',
-              cursor: 'pointer',
-              fontWeight: 700,
-              fontSize: '13px',
-            }}
-          >
-            Go to Vault
-          </button>
-          <button
-            onClick={() => navigate(`/collab/${groupId}`)}
-            style={{
-              padding: '10px 20px',
-              borderRadius: '9999px',
-              backgroundColor: '#00e676',
-              border: 'none',
-              color: '#000000',
-              cursor: 'pointer',
-              fontWeight: 800,
-              fontSize: '13px',
-              boxShadow: '0 0 16px rgba(0, 230, 118, 0.3)',
-            }}
-          >
-            Check Invitation Link
-          </button>
-        </div>
-      </div>
-    );
+    return <Navigate to="/dashboard" replace />;
   }
 
   if (!group) {

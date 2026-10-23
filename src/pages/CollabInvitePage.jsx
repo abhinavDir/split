@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { groupService } from '../services/group.service';
 import { useExpenseGroup } from '../context/ExpenseGroupContext';
 import { useAuth } from '../context/AuthContext';
@@ -110,43 +110,7 @@ export function CollabInvitePage() {
   }
 
   if (error && !collabInfo) {
-    return (
-      <div
-        style={{
-          maxWidth: '480px',
-          margin: '60px auto',
-          padding: '36px',
-          backgroundColor: '#070c09',
-          borderRadius: '22px',
-          border: '1px solid rgba(244, 63, 94, 0.3)',
-          textAlign: 'center',
-          boxShadow: '0 8px 32px rgba(244, 63, 94, 0.12)',
-        }}
-      >
-        <AlertTriangle size={48} style={{ color: '#f43f5e', margin: '0 auto 16px auto' }} />
-        <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-          Invitation Not Found
-        </h2>
-        <p style={{ fontSize: '13px', color: '#8899a6', marginBottom: '24px', lineHeight: 1.5 }}>
-          {error}
-        </p>
-        <button
-          onClick={() => navigate('/dashboard')}
-          style={{
-            padding: '10px 22px',
-            borderRadius: '9999px',
-            backgroundColor: '#0a120e',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#ffffff',
-            fontWeight: 700,
-            fontSize: '13px',
-            cursor: 'pointer',
-          }}
-        >
-          Return to Vault
-        </button>
-      </div>
-    );
+    return <Navigate to={user ? "/dashboard" : "/"} replace />;
   }
 
   const isCompleted = collabInfo?.isCompleted || collabInfo?.status === 'COMPLETED';
