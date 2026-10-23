@@ -625,5 +625,160 @@ a:hover {
   }
 }
 
+/* ========================================================
+   LANDING PAGE CAROUSEL & COVER STAGE
+   ======================================================== */
+.landing-carousel-stage {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+  perspective: 1200px;
+  overflow: visible;
+}
+
+.landing-flanking-card {
+  position: absolute;
+  width: clamp(170px, 22vw, 250px);
+  height: clamp(260px, 32vw, 340px);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.landing-flanking-left {
+  left: clamp(2%, 6vw, 100px);
+  transform: scale(0.85) rotateY(12deg) translateZ(-50px);
+  opacity: 0.45;
+  filter: blur(0.5px);
+}
+
+.landing-flanking-right {
+  right: clamp(2%, 6vw, 100px);
+  transform: scale(0.85) rotateY(-12deg) translateZ(-50px);
+  opacity: 0.45;
+  filter: blur(0.5px);
+}
+
+.landing-flanking-card:hover {
+  opacity: 0.82 !important;
+  filter: blur(0px) !important;
+}
+
+@media (max-width: 768px) {
+  .landing-carousel-stage {
+    min-height: 380px;
+  }
+  .landing-flanking-card {
+    width: clamp(140px, 38vw, 190px);
+    height: clamp(230px, 56vw, 290px);
+    display: block !important;
+  }
+  .landing-flanking-left {
+    left: -14px !important;
+    transform: scale(0.82) rotateY(14deg) translateZ(-30px) !important;
+    opacity: 0.42 !important;
+  }
+  .landing-flanking-right {
+    right: -14px !important;
+    transform: scale(0.82) rotateY(-14deg) translateZ(-30px) !important;
+    opacity: 0.42 !important;
+  }
+  .landing-badge-top {
+    right: -6px !important;
+    top: 36px !important;
+    transform: scale(0.88) !important;
+    transform-origin: right center !important;
+  }
+  .landing-badge-bottom {
+    left: -6px !important;
+    bottom: 50px !important;
+    transform: scale(0.88) !important;
+    transform-origin: left center !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .landing-flanking-left {
+    left: -24px !important;
+    transform: scale(0.78) rotateY(14deg) translateZ(-20px) !important;
+    opacity: 0.4 !important;
+  }
+  .landing-flanking-right {
+    right: -24px !important;
+    transform: scale(0.78) rotateY(-14deg) translateZ(-20px) !important;
+    opacity: 0.4 !important;
+  }
+  .landing-badge-top {
+    right: 0px !important;
+    transform: scale(0.8) !important;
+  }
+  .landing-badge-bottom {
+    left: 0px !important;
+    transform: scale(0.8) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .landing-badge-top {
+    right: 4px !important;
+    transform: scale(0.82) !important;
+  }
+  .landing-badge-bottom {
+    left: 4px !important;
+    transform: scale(0.82) !important;
+  }
+}
+
+/* ========================================================
+   LANDING TOP NAVBAR & DROPDOWN MENU
+   ======================================================== */
+.landing-nav-dropdown {
+  position: absolute;
+  top: 76px;
+  right: 20px;
+  width: 260px;
+  background-color: rgba(7, 22, 14, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 22px;
+  padding: 14px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: fadeInMenu 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-nav-dropdown {
+    right: 14px;
+    left: 14px;
+    width: auto !important;
+  }
+}
+
+
 
 

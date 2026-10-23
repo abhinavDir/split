@@ -31,21 +31,74 @@ export function ForgotPasswordPage() {
           boxSizing: 'border-box',
         }}
       >
-        {/* Brand */}
+        {/* Top Bar: Back to Landing Page Arrow + Brand Logo */}
         <div
-          onClick={() => navigate('/')}
           style={{
-            fontSize: '22px',
-            fontWeight: 900,
-            letterSpacing: '-0.04em',
-            color: '#ffffff',
-            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             marginBottom: '24px',
-            userSelect: 'none',
-            textAlign: 'center',
           }}
         >
-          tandem
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '9999px',
+              padding: '6px 14px 6px 8px',
+              color: '#ffffff',
+              fontSize: '11.5px',
+              fontWeight: 900,
+              letterSpacing: '0.02em',
+              cursor: 'pointer',
+              transition: 'all 0.18s ease',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
+              e.currentTarget.style.transform = 'translateX(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+              e.currentTarget.style.transform = 'translateX(0)';
+            }}
+            title="Back to Landing Page"
+          >
+            <div
+              style={{
+                width: '22px',
+                height: '22px',
+                borderRadius: '50%',
+                backgroundColor: '#2bb673',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ArrowLeft size={13} strokeWidth={3} />
+            </div>
+            <span>Home</span>
+          </button>
+
+          <div
+            onClick={() => navigate('/')}
+            style={{
+              fontSize: '22px',
+              fontWeight: 900,
+              letterSpacing: '-0.04em',
+              color: '#ffffff',
+              cursor: 'pointer',
+              userSelect: 'none',
+            }}
+          >
+            tandem
+          </div>
         </div>
 
         {submitted ? (

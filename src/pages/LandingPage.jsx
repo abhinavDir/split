@@ -10,6 +10,8 @@ import {
   X,
   Compass,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   Users,
   ShieldCheck,
   Zap,
@@ -28,11 +30,18 @@ export function LandingPage() {
       title: 'Lisbon, June',
       amount: '$1,840',
       target: 'OF $2,400',
+      percent: 76,
       friends: '5 FRIENDS',
       image: '/landing/lisbon.jpg',
       paidBy: 'Maya paid you $24',
       paidDesc: 'Tacos on Friday • just now',
       requestAmount: '+$24',
+      description: 'Shared beach house, surf gear & seafood dinners',
+      avatars: [
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80',
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&q=80',
+      ],
     },
     {
       id: 'sunset',
@@ -40,11 +49,18 @@ export function LandingPage() {
       title: 'Pacific Coast, July',
       amount: '$2,450',
       target: 'OF $3,000',
+      percent: 82,
       friends: '6 FRIENDS',
       image: '/landing/sunset.jpg',
       paidBy: 'Alex paid you $65',
       paidDesc: 'Van fuel & snacks • 2h ago',
       requestAmount: '+$65',
+      description: 'Campervan rental, campsite fees & highway tolls',
+      avatars: [
+        'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=80&q=80',
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&q=80',
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80',
+      ],
     },
     {
       id: 'dining',
@@ -52,15 +68,26 @@ export function LandingPage() {
       title: 'Flat 4B Groceries',
       amount: '$920',
       target: 'OF $1,200',
+      percent: 77,
       friends: '3 FRIENDS',
       image: '/landing/dining.jpg',
       paidBy: 'Sam paid you $32',
       paidDesc: 'Sunday brunch pizza • 4h ago',
       requestAmount: '+$32',
+      description: 'Weekly organic groceries, Wi-Fi & Sunday brunch',
+      avatars: [
+        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80',
+      ],
     },
   ];
 
+  const prevSlideIndex = (activeSlide - 1 + CARDS.length) % CARDS.length;
+  const nextSlideIndex = (activeSlide + 1) % CARDS.length;
+
   const currentCard = CARDS[activeSlide];
+  const prevCard = CARDS[prevSlideIndex];
+  const nextCard = CARDS[nextSlideIndex];
 
   return (
     <div
@@ -119,247 +146,176 @@ export function LandingPage() {
           zIndex: 50,
         }}
       >
-        {/* Left Floating Capsule: Logo + Nav Items + Menu Hamburger */}
+        {/* Left Side: App Name (tandem) */}
         <div
+          onClick={() => navigate('/')}
           style={{
-            backgroundColor: 'rgba(9, 28, 19, 0.75)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            backgroundColor: 'rgba(9, 28, 19, 0.78)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(255, 255, 255, 0.14)',
             borderRadius: '9999px',
-            padding: '7px 18px 7px 20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '24px',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+            padding: '8px 20px',
+            cursor: 'pointer',
+            userSelect: 'none',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+            transition: 'transform 0.15s ease, border-color 0.15s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.28)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.14)';
           }}
         >
-          {/* Logo Brand */}
-          <div
-            onClick={() => navigate('/')}
+          <span
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              cursor: 'pointer',
-              userSelect: 'none',
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: '#2bb673',
+              boxShadow: '0 0 10px #2bb673',
+            }}
+          />
+          <span
+            style={{
+              fontSize: '18px',
+              fontWeight: 900,
+              letterSpacing: '-0.04em',
+              color: '#ffffff',
             }}
           >
-            <span
-              style={{
-                fontSize: '18px',
-                fontWeight: 800,
-                letterSpacing: '-0.04em',
-                color: '#ffffff',
-              }}
-            >
-              tandem
-            </span>
-          </div>
-
-          {/* Desktop Nav Links */}
-          <nav
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '20px',
-            }}
-            className="hidden-mobile"
-          >
-            {['Split'].map((item) => (
-              <button
-                key={item}
-                onClick={() => {
-                  if (item === 'Split' || item === 'Pots') {
-                    navigate(user ? '/dashboard' : '/login');
-                  }
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  padding: '4px 2px',
-                  transition: 'color 0.15s ease',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)')}
-              >
-                {item}
-              </button>
-            ))}
-          </nav>
-
-          {/* Hamburger Menu Icon in Pill */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'rgba(255, 255, 255, 0.85)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              padding: '2px',
-            }}
-            aria-label="Toggle navigation"
-          >
-            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
+            tandem
+          </span>
         </div>
 
-        {/* Right Action Buttons: Log in + Start for free */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Right Side: Hamburger Menu Button */}
+        <button
+          type="button"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          style={{
+            backgroundColor: isMobileMenuOpen ? '#fdf06f' : 'rgba(9, 28, 19, 0.78)',
+            color: isMobileMenuOpen ? '#111827' : '#ffffff',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: isMobileMenuOpen ? '1px solid #fdf06f' : '1px solid rgba(255, 255, 255, 0.16)',
+            borderRadius: '9999px',
+            padding: '9px 15px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            cursor: 'pointer',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+            transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+          onMouseEnter={(e) => {
+            if (!isMobileMenuOpen) {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isMobileMenuOpen) {
+              e.currentTarget.style.backgroundColor = 'rgba(9, 28, 19, 0.78)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }
+          }}
+          aria-label="Toggle navigation menu"
+        >
+          {isMobileMenuOpen ? <X size={20} strokeWidth={2.8} /> : <Menu size={20} strokeWidth={2.5} />}
+        </button>
+      </header>
+
+      {/* DROPDOWN MENU: ONLY LOGIN & SIGNUP */}
+      {isMobileMenuOpen && (
+        <div className="landing-nav-dropdown">
           {user ? (
             <button
-              onClick={() => navigate('/dashboard')}
+              type="button"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                navigate('/dashboard');
+              }}
               style={{
                 background: '#fdf06f',
                 color: '#111827',
                 border: 'none',
+                padding: '13px 20px',
                 borderRadius: '9999px',
-                padding: '9px 20px',
+                fontWeight: 900,
                 fontSize: '14px',
-                fontWeight: 700,
                 cursor: 'pointer',
-                boxShadow: '0 4px 16px rgba(253, 240, 111, 0.3)',
-                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(253, 240, 111, 0.45)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(253, 240, 111, 0.3)';
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                boxShadow: '0 4px 16px rgba(253, 240, 111, 0.35)',
               }}
             >
-              Go to Dashboard
+              <span>Go to Dashboard</span>
+              <ArrowRight size={17} strokeWidth={2.8} />
             </button>
           ) : (
             <>
               <button
-                onClick={() => navigate('/login')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  padding: '8px 12px',
-                  transition: 'color 0.15s ease',
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate('/login');
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)')}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  color: '#ffffff',
+                  padding: '12px 18px',
+                  borderRadius: '9999px',
+                  fontWeight: 800,
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)')}
               >
-                Log in
+                Log In
               </button>
-
               <button
-                onClick={() => navigate('/register')}
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate('/register');
+                }}
                 style={{
                   background: '#fdf06f',
-                  color: '#111827',
                   border: 'none',
+                  color: '#111827',
+                  padding: '12px 18px',
                   borderRadius: '9999px',
-                  padding: '9px 22px',
+                  fontWeight: 900,
                   fontSize: '14px',
-                  fontWeight: 700,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 16px rgba(253, 240, 111, 0.3)',
-                  transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-                  letterSpacing: '-0.01em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 16px rgba(253, 240, 111, 0.35)',
+                  transition: 'transform 0.15s ease',
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(253, 240, 111, 0.45)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(253, 240, 111, 0.3)';
-                }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-1px)')}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
               >
-                Start for free
+                <span>Sign Up Free</span>
+                <ArrowRight size={17} strokeWidth={2.8} />
               </button>
             </>
           )}
-        </div>
-      </header>
-
-      {/* MOBILE MENU DROPDOWN */}
-      {isMobileMenuOpen && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '80px',
-            left: '20px',
-            right: '20px',
-            backgroundColor: 'rgba(8, 26, 17, 0.96)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '24px',
-            padding: '20px',
-            zIndex: 100,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            boxShadow: '0 16px 40px rgba(0,0,0,0.6)',
-          }}
-        >
-          {['Pots', 'Split', 'Cards', 'Pricing', 'Stories'].map((item) => (
-            <button
-              key={item}
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                navigate(user ? '/dashboard' : '/login');
-              }}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#ffffff',
-                fontSize: '16px',
-                fontWeight: 600,
-                textAlign: 'left',
-                padding: '8px 0',
-                cursor: 'pointer',
-              }}
-            >
-              {item}
-            </button>
-          ))}
-          <div style={{ height: '1px', backgroundColor: 'rgba(255,255,255,0.1)', margin: '8px 0' }} />
-          <button
-            onClick={() => navigate('/login')}
-            style={{
-              background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.2)',
-              color: '#ffffff',
-              padding: '12px',
-              borderRadius: '9999px',
-              fontWeight: 700,
-              cursor: 'pointer',
-            }}
-          >
-            Log In
-          </button>
-          <button
-            onClick={() => navigate('/register')}
-            style={{
-              background: '#fdf06f',
-              border: 'none',
-              color: '#111827',
-              padding: '12px',
-              borderRadius: '9999px',
-              fontWeight: 700,
-              cursor: 'pointer',
-            }}
-          >
-            Start for free
-          </button>
         </div>
       )}
 
@@ -530,129 +486,219 @@ export function LandingPage() {
 
             {/* Friend Groups Count */}
             <span style={{ fontSize: '13px', fontWeight: 500, color: 'rgba(255, 255, 255, 0.82)' }}>
-              2M friend groups
+              friend groups
             </span>
           </div>
         </div>
 
         {/* 3D CAROUSEL / FLOATING CARDS STAGE */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            maxWidth: '920px',
-            margin: '0 auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '380px',
-            perspective: '1200px',
-          }}
-        >
-          {/* Left Flanking Card (Sunset Road Trip) */}
-          <div
-            onClick={() => setActiveSlide(1)}
+        <div className="landing-carousel-stage">
+          {/* Left Navigation Arrow */}
+          <button
+            type="button"
+            onClick={() => setActiveSlide(prevSlideIndex)}
             style={{
               position: 'absolute',
-              left: 'clamp(0px, 10vw, 110px)',
-              width: 'clamp(180px, 21vw, 240px)',
-              height: 'clamp(260px, 29vw, 330px)',
-              borderRadius: '24px',
-              overflow: 'hidden',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.65)',
-              transform: 'scale(0.86) rotateY(10deg) translateZ(-60px)',
-              opacity: 0.72,
-              filter: 'blur(1px)',
-              transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+              left: 'clamp(6px, 2vw, 24px)',
+              zIndex: 35,
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(8, 24, 16, 0.82)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               cursor: 'pointer',
-              zIndex: 5,
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
+              transition: 'transform 0.15s ease, background-color 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '0.9';
-              e.currentTarget.style.filter = 'blur(0px)';
-              e.currentTarget.style.transform = 'scale(0.9) rotateY(6deg) translateZ(-20px)';
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'scale(1.08)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '0.72';
-              e.currentTarget.style.filter = 'blur(1px)';
-              e.currentTarget.style.transform = 'scale(0.86) rotateY(10deg) translateZ(-60px)';
+              e.currentTarget.style.backgroundColor = 'rgba(8, 24, 16, 0.82)';
+              e.currentTarget.style.transform = 'scale(1)';
             }}
+            title="Previous Trip"
+            aria-label="Previous Trip"
+          >
+            <ChevronLeft size={20} strokeWidth={2.8} />
+          </button>
+
+          {/* Right Navigation Arrow */}
+          <button
+            type="button"
+            onClick={() => setActiveSlide(nextSlideIndex)}
+            style={{
+              position: 'absolute',
+              right: 'clamp(6px, 2vw, 24px)',
+              zIndex: 35,
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(8, 24, 16, 0.82)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
+              transition: 'transform 0.15s ease, background-color 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'scale(1.08)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(8, 24, 16, 0.82)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+            title="Next Trip"
+            aria-label="Next Trip"
+          >
+            <ChevronRight size={20} strokeWidth={2.8} />
+          </button>
+
+          {/* Left Flanking Card (40% Peek / Side Coverage) */}
+          <div
+            onClick={() => setActiveSlide(prevSlideIndex)}
+            className="landing-flanking-card landing-flanking-left"
+            title={`Switch to ${prevCard.title}`}
           >
             <img
-              src="/landing/sunset.jpg"
-              alt="Road Trip"
+              src={prevCard.image}
+              alt={prevCard.title}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
             <div
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)',
+                background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 40%, transparent 70%)',
               }}
             />
-            <div style={{ position: 'absolute', bottom: '16px', left: '16px' }}>
-              <p style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>Pacific Coast, July</p>
-              <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>$2,450 • 6 FRIENDS</p>
+            {/* Tag */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '12px',
+                left: '12px',
+                backgroundColor: 'rgba(0, 0, 0, 0.55)',
+                backdropFilter: 'blur(8px)',
+                borderRadius: '9999px',
+                padding: '3px 9px',
+                fontSize: '9.5px',
+                fontWeight: 800,
+                color: 'rgba(255, 255, 255, 0.9)',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+              }}
+            >
+              {prevCard.tag}
+            </div>
+            {/* Bottom Preview */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '12px',
+                left: '12px',
+                right: '12px',
+                backgroundColor: 'rgba(12, 24, 18, 0.75)',
+                backdropFilter: 'blur(12px)',
+                borderRadius: '14px',
+                padding: '8px 10px',
+                textAlign: 'left',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              }}
+            >
+              <p style={{ fontSize: '12.5px', fontWeight: 800, color: '#ffffff', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {prevCard.title}
+              </p>
+              <p style={{ fontSize: '10.5px', color: '#fdf06f', fontWeight: 700, margin: '2px 0 0 0' }}>
+                {prevCard.amount} • {prevCard.friends}
+              </p>
             </div>
           </div>
 
-          {/* Right Flanking Card (Friends Dining) */}
+          {/* Right Flanking Card (40% Peek / Side Coverage) */}
           <div
-            onClick={() => setActiveSlide(2)}
-            style={{
-              position: 'absolute',
-              right: 'clamp(0px, 10vw, 110px)',
-              width: 'clamp(180px, 21vw, 240px)',
-              height: 'clamp(260px, 29vw, 330px)',
-              borderRadius: '24px',
-              overflow: 'hidden',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.65)',
-              transform: 'scale(0.86) rotateY(-10deg) translateZ(-60px)',
-              opacity: 0.72,
-              filter: 'blur(1px)',
-              transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-              cursor: 'pointer',
-              zIndex: 5,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '0.9';
-              e.currentTarget.style.filter = 'blur(0px)';
-              e.currentTarget.style.transform = 'scale(0.9) rotateY(-6deg) translateZ(-20px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '0.72';
-              e.currentTarget.style.filter = 'blur(1px)';
-              e.currentTarget.style.transform = 'scale(0.86) rotateY(-10deg) translateZ(-60px)';
-            }}
+            onClick={() => setActiveSlide(nextSlideIndex)}
+            className="landing-flanking-card landing-flanking-right"
+            title={`Switch to ${nextCard.title}`}
           >
             <img
-              src="/landing/dining.jpg"
-              alt="Dining"
+              src={nextCard.image}
+              alt={nextCard.title}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
             <div
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)',
+                background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 40%, transparent 70%)',
               }}
             />
-            <div style={{ position: 'absolute', bottom: '16px', left: '16px' }}>
-              <p style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>Flat 4B Groceries</p>
-              <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>$920 • 3 FRIENDS</p>
+            {/* Tag */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '12px',
+                left: '12px',
+                backgroundColor: 'rgba(0, 0, 0, 0.55)',
+                backdropFilter: 'blur(8px)',
+                borderRadius: '9999px',
+                padding: '3px 9px',
+                fontSize: '9.5px',
+                fontWeight: 800,
+                color: 'rgba(255, 255, 255, 0.9)',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+              }}
+            >
+              {nextCard.tag}
+            </div>
+            {/* Bottom Preview */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '12px',
+                left: '12px',
+                right: '12px',
+                backgroundColor: 'rgba(12, 24, 18, 0.75)',
+                backdropFilter: 'blur(12px)',
+                borderRadius: '14px',
+                padding: '8px 10px',
+                textAlign: 'left',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              }}
+            >
+              <p style={{ fontSize: '12.5px', fontWeight: 800, color: '#ffffff', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {nextCard.title}
+              </p>
+              <p style={{ fontSize: '10.5px', color: '#fdf06f', fontWeight: 700, margin: '2px 0 0 0' }}>
+                {nextCard.amount} • {nextCard.friends}
+              </p>
             </div>
           </div>
 
-          {/* Central Hero Card (Lisbon, June - Active Focus) */}
+          {/* Central Hero Card (100% Focused & Top View) */}
           <div
             style={{
               position: 'relative',
-              width: 'clamp(230px, 27vw, 290px)',
-              height: 'clamp(320px, 37vw, 390px)',
-              borderRadius: '26px',
+              width: 'clamp(230px, 28vw, 300px)',
+              height: 'clamp(330px, 39vw, 410px)',
+              borderRadius: '28px',
               overflow: 'visible',
               zIndex: 20,
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.7)',
+              boxShadow: '0 28px 70px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.14)',
               transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
@@ -664,7 +710,7 @@ export function LandingPage() {
                 borderRadius: '28px',
                 overflow: 'hidden',
                 position: 'relative',
-                border: '1px solid rgba(255, 255, 255, 0.14)',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
               }}
             >
               <img
@@ -683,7 +729,7 @@ export function LandingPage() {
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to top, rgba(10, 16, 12, 0.95) 0%, rgba(10, 16, 12, 0.4) 40%, transparent 70%)',
+                  background: 'linear-gradient(to top, rgba(6, 16, 11, 0.96) 0%, rgba(6, 16, 11, 0.45) 45%, transparent 75%)',
                 }}
               />
 
@@ -693,11 +739,12 @@ export function LandingPage() {
                   position: 'absolute',
                   top: '16px',
                   left: '16px',
-                  backgroundColor: 'rgba(12, 28, 19, 0.65)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255, 255, 255, 0.14)',
+                  backgroundColor: 'rgba(10, 26, 17, 0.72)',
+                  backdropFilter: 'blur(14px)',
+                  WebkitBackdropFilter: 'blur(14px)',
+                  border: '1px solid rgba(255, 255, 255, 0.16)',
                   borderRadius: '9999px',
-                  padding: '4px 12px',
+                  padding: '5px 12px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
@@ -709,13 +756,14 @@ export function LandingPage() {
                     height: '6px',
                     borderRadius: '50%',
                     backgroundColor: '#fdf06f',
+                    boxShadow: '0 0 8px #fdf06f',
                   }}
                 />
                 <span
                   style={{
                     fontSize: '10px',
-                    fontWeight: 800,
-                    letterSpacing: '0.06em',
+                    fontWeight: 900,
+                    letterSpacing: '0.07em',
                     color: 'rgba(255, 255, 255, 0.95)',
                     textTransform: 'uppercase',
                   }}
@@ -724,68 +772,147 @@ export function LandingPage() {
                 </span>
               </div>
 
-              {/* Bottom Card Overlay: Title + Progress Breakdown */}
+              {/* Bottom Card Overlay: Title + Subtitle + Progress Bar + Breakdown */}
               <div
                 style={{
                   position: 'absolute',
-                  bottom: '16px',
-                  left: '16px',
-                  right: '16px',
-                  backgroundColor: 'rgba(15, 24, 18, 0.78)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: '18px',
+                  bottom: '14px',
+                  left: '14px',
+                  right: '14px',
+                  backgroundColor: 'rgba(10, 22, 15, 0.84)',
+                  backdropFilter: 'blur(18px)',
+                  WebkitBackdropFilter: 'blur(18px)',
+                  border: '1px solid rgba(255, 255, 255, 0.14)',
+                  borderRadius: '20px',
                   padding: '14px 16px',
                   textAlign: 'left',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
                 }}
               >
-                <h3
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                  <h3
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: 800,
+                      color: '#ffffff',
+                      margin: 0,
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    {currentCard.title}
+                  </h3>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      color: '#2bb673',
+                      backgroundColor: 'rgba(43, 182, 115, 0.15)',
+                      padding: '2px 8px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(43, 182, 115, 0.3)',
+                    }}
+                  >
+                    {currentCard.percent}%
+                  </span>
+                </div>
+
+                {/* Subtitle / Activity note */}
+                <p
                   style={{
-                    fontSize: '18px',
-                    fontWeight: 700,
-                    color: '#ffffff',
-                    margin: 0,
-                    letterSpacing: '-0.02em',
+                    fontSize: '11.5px',
+                    color: 'rgba(255, 255, 255, 0.72)',
+                    margin: '3px 0 8px 0',
+                    lineHeight: 1.35,
+                    fontWeight: 500,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   }}
                 >
-                  {currentCard.title}
-                </h3>
+                  {currentCard.description}
+                </p>
+
+                {/* Funding Progress Bar */}
+                <div
+                  style={{
+                    width: '100%',
+                    height: '5px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                    borderRadius: '9999px',
+                    overflow: 'hidden',
+                    marginBottom: '10px',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${currentCard.percent}%`,
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #2bb673 0%, #fdf06f 100%)',
+                      borderRadius: '9999px',
+                      transition: 'width 0.4s ease',
+                    }}
+                  />
+                </div>
+
+                {/* Amount Target & Friends Stats */}
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
-                    marginTop: '4px',
+                    justifyContent: 'space-between',
                     fontSize: '12px',
                     fontWeight: 700,
-                    letterSpacing: '0.02em',
                   }}
                 >
-                  <span style={{ color: '#fdf06f' }}>{currentCard.amount}</span>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{currentCard.target}</span>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{currentCard.friends}</span>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px' }}>
+                    <span style={{ color: '#fdf06f', fontWeight: 900, fontSize: '13.5px' }}>{currentCard.amount}</span>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.65)', fontSize: '11px' }}>{currentCard.target}</span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {/* Avatars Pile */}
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {currentCard.avatars?.map((av, i) => (
+                        <img
+                          key={i}
+                          src={av}
+                          alt="avatar"
+                          style={{
+                            width: '18px',
+                            height: '18px',
+                            borderRadius: '50%',
+                            border: '1.5px solid #0d2217',
+                            marginLeft: i > 0 ? '-6px' : 0,
+                            objectFit: 'cover',
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '11px', fontWeight: 600 }}>
+                      {currentCard.friends}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Floating Top-Right Notification: "Maya paid you $24" */}
             <div
+              className="landing-badge-top"
               style={{
                 position: 'absolute',
-                top: '55px',
-                right: '-46px',
-                backgroundColor: 'rgba(18, 30, 23, 0.88)',
+                top: '52px',
+                right: '-38px',
+                backgroundColor: 'rgba(14, 28, 20, 0.92)',
                 backdropFilter: 'blur(16px)',
                 WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.16)',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
                 borderRadius: '9999px',
                 padding: '6px 14px 6px 6px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.5)',
+                boxShadow: '0 14px 34px rgba(0, 0, 0, 0.6)',
                 zIndex: 30,
               }}
             >
@@ -793,17 +920,17 @@ export function LandingPage() {
                 src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80"
                 alt="Maya"
                 style={{
-                  width: '30px',
-                  height: '30px',
+                  width: '28px',
+                  height: '28px',
                   borderRadius: '50%',
                   objectFit: 'cover',
                 }}
               />
               <div style={{ textAlign: 'left' }}>
-                <p style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff', margin: 0, whiteSpace: 'nowrap' }}>
+                <p style={{ fontSize: '11.5px', fontWeight: 800, color: '#ffffff', margin: 0, whiteSpace: 'nowrap' }}>
                   {currentCard.paidBy}
                 </p>
-                <p style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.65)', margin: 0, whiteSpace: 'nowrap' }}>
+                <p style={{ fontSize: '9.5px', color: 'rgba(255, 255, 255, 0.65)', margin: 0, whiteSpace: 'nowrap' }}>
                   {currentCard.paidDesc}
                 </p>
               </div>
@@ -820,27 +947,28 @@ export function LandingPage() {
                   marginLeft: '2px',
                 }}
               >
-                <Check size={12} strokeWidth={3} />
+                <Check size={11} strokeWidth={3.2} />
               </div>
             </div>
 
             {/* Floating Bottom-Left Pill: "+ Request $24" */}
             <div
+              className="landing-badge-bottom"
               onClick={() => navigate(user ? '/dashboard' : '/register')}
               style={{
                 position: 'absolute',
-                bottom: '80px',
-                left: '-34px',
+                bottom: '72px',
+                left: '-28px',
                 backgroundColor: '#ffffff',
                 color: '#111827',
                 borderRadius: '9999px',
-                padding: '8px 16px',
+                padding: '7px 15px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                fontSize: '13px',
-                fontWeight: 700,
-                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+                fontSize: '12.5px',
+                fontWeight: 800,
+                boxShadow: '0 10px 28px rgba(0, 0, 0, 0.5)',
                 cursor: 'pointer',
                 zIndex: 30,
                 transition: 'transform 0.15s ease',
@@ -848,7 +976,7 @@ export function LandingPage() {
               onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
               onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
             >
-              <Plus size={15} strokeWidth={2.8} />
+              <Plus size={14} strokeWidth={3} />
               <span>Request $24</span>
             </div>
           </div>
