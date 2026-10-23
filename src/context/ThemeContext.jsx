@@ -136,7 +136,11 @@ export const ACCENT_OPTIONS = [
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('split_money_theme') || 'dark';
+    const userExplicit = localStorage.getItem('split_money_theme_explicit');
+    if (userExplicit) {
+      return localStorage.getItem('split_money_theme') || 'light';
+    }
+    return 'light';
   });
 
   const [accent, setAccent] = useState(() => {
@@ -162,14 +166,23 @@ export function ThemeProvider({ children }) {
   }, [accent, currentAccent]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('split_money_theme_explicit', 'true');
+      return next;
+    });
+  };
+
+  const handleSetTheme = (newTheme) => {
+    localStorage.setItem('split_money_theme_explicit', 'true');
+    setTheme(newTheme);
   };
 
   return (
     <ThemeContext.Provider
       value={{
         theme,
-        setTheme,
+        setTheme: handleSetTheme,
         toggleTheme,
         accent,
         setAccent,

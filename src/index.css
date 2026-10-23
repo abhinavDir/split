@@ -516,3 +516,114 @@ a:hover {
   }
 }
 
+/* ========================================================
+   AUTH PAGES RESPONSIVE ARCHITECTURE (Login & Signup)
+   ======================================================== */
+.auth-page-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 16px;
+  background-color: #0a1d14;
+  background: radial-gradient(ellipse 120% 85% at 50% 25%, #133a28 0%, #0c271b 45%, #05140e 100%);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+.auth-card-box {
+  width: 100%;
+  max-width: 1040px;
+  background-color: #070c09;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 36px;
+  padding: 36px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 36px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.auth-form-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 8px;
+  position: relative;
+  background: radial-gradient(circle at 95% 55%, rgba(34, 197, 94, 0.12) 0%, transparent 60%);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.auth-showcase-column {
+  background-color: #2bb673;
+  background: linear-gradient(155deg, #32c480 0%, #22a866 100%);
+  border-radius: 28px;
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 20px 50px rgba(43, 182, 115, 0.28);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 860px) {
+  .auth-card-box {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    padding: 26px 20px;
+    border-radius: 28px;
+    gap: 26px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-page-container {
+    padding: 16px 10px !important;
+  }
+  .auth-card-box {
+    padding: 20px 14px !important;
+    border-radius: 22px !important;
+    max-width: 100% !important;
+    gap: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .auth-form-column {
+    padding: 0 !important;
+    background: none !important;
+  }
+  .auth-showcase-column {
+    display: flex !important;
+    padding: 20px 16px !important;
+    border-radius: 20px !important;
+    margin-top: 6px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-page-container {
+    padding: 10px 6px !important;
+  }
+  .auth-card-box {
+    padding: 16px 10px !important;
+    border-radius: 18px !important;
+    gap: 16px !important;
+  }
+  .auth-showcase-column {
+    padding: 16px 12px !important;
+    border-radius: 16px !important;
+  }
+}
+
+
+

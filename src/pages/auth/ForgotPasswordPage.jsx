@@ -18,40 +18,29 @@ export function ForgotPasswordPage() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        width: '100%',
-        backgroundColor: '#030d07',
-        background: 'radial-gradient(ellipse 100% 70% at 50% 20%, #0d2e1f 0%, #061910 50%, #020905 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '32px 16px',
-        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-      }}
-    >
+    <div className="auth-page-container">
       <div
         style={{
           width: '100%',
-          maxWidth: '480px',
-          backgroundColor: '#040b07',
+          maxWidth: '460px',
+          backgroundColor: '#070c09',
           border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '32px',
-          padding: '40px 36px',
-          boxShadow: '0 24px 70px rgba(0, 0, 0, 0.75)',
+          borderRadius: '26px',
+          padding: '28px 24px',
+          boxShadow: '0 24px 70px rgba(0, 0, 0, 0.85)',
+          boxSizing: 'border-box',
         }}
       >
         {/* Brand */}
         <div
           onClick={() => navigate('/')}
           style={{
-            fontSize: '24px',
-            fontWeight: 800,
+            fontSize: '22px',
+            fontWeight: 900,
             letterSpacing: '-0.04em',
             color: '#ffffff',
             cursor: 'pointer',
-            marginBottom: '32px',
+            marginBottom: '24px',
             userSelect: 'none',
             textAlign: 'center',
           }}
@@ -63,8 +52,8 @@ export function ForgotPasswordPage() {
           <div style={{ textAlign: 'center', padding: '10px 0' }}>
             <div
               style={{
-                width: '56px',
-                height: '56px',
+                width: '52px',
+                height: '52px',
                 borderRadius: '50%',
                 backgroundColor: 'rgba(34, 197, 94, 0.15)',
                 color: '#22c55e',
@@ -74,12 +63,12 @@ export function ForgotPasswordPage() {
                 marginBottom: '16px',
               }}
             >
-              <CheckCircle2 size={32} />
+              <CheckCircle2 size={28} />
             </div>
-            <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff', marginBottom: '8px' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 900, color: '#ffffff', marginBottom: '8px' }}>
               Check your inbox
             </h2>
-            <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', lineHeight: 1.55, marginBottom: '28px' }}>
+            <p style={{ fontSize: '12px', fontWeight: 700, color: 'rgba(255, 255, 255, 0.7)', lineHeight: 1.5, marginBottom: '24px' }}>
               If an account exists for <strong style={{ color: '#ffffff' }}>{email}</strong>, we've sent password recovery instructions.
             </p>
             <Link
@@ -87,15 +76,18 @@ export function ForgotPasswordPage() {
               style={{
                 display: 'inline-block',
                 width: '100%',
-                backgroundColor: '#25a168',
+                backgroundColor: '#2bb673',
                 color: '#ffffff',
                 textDecoration: 'none',
                 textAlign: 'center',
-                padding: '13px',
-                borderRadius: '14px',
-                fontWeight: 700,
-                fontSize: '14px',
-                boxShadow: '0 4px 16px rgba(37, 161, 104, 0.35)',
+                padding: '13px 20px',
+                borderRadius: '9999px',
+                fontWeight: 900,
+                fontSize: '13.5px',
+                letterSpacing: '0.02em',
+                textTransform: 'uppercase',
+                boxShadow: '0 4px 16px rgba(43, 182, 115, 0.35)',
+                boxSizing: 'border-box',
               }}
             >
               Return to Sign In
@@ -105,35 +97,38 @@ export function ForgotPasswordPage() {
           <div>
             <h2
               style={{
-                fontSize: '20px',
-                fontWeight: 700,
+                fontSize: '16px',
+                fontWeight: 900,
                 color: '#ffffff',
                 marginBottom: '8px',
-                letterSpacing: '-0.01em',
+                letterSpacing: '-0.02em',
               }}
             >
               Reset your password
             </h2>
             <p
               style={{
-                fontSize: '13px',
+                fontSize: '12px',
+                fontWeight: 700,
                 color: 'rgba(255, 255, 255, 0.65)',
-                marginBottom: '26px',
+                marginBottom: '20px',
                 lineHeight: 1.5,
               }}
             >
               Enter the email associated with your account and we’ll send a link to reset your password.
             </p>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
                 <label
                   style={{
                     display: 'block',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#ffffff',
-                    marginBottom: '8px',
+                    fontSize: '11px',
+                    fontWeight: 900,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    color: 'rgba(255, 255, 255, 0.85)',
+                    marginBottom: '6px',
                   }}
                 >
                   Email
@@ -151,11 +146,12 @@ export function ForgotPasswordPage() {
                     color: '#0f172a',
                     border: 'none',
                     borderRadius: '9999px',
-                    padding: '14px 22px',
-                    fontSize: '14.5px',
-                    fontWeight: 600,
+                    padding: '12px 18px',
+                    fontSize: '13px',
+                    fontWeight: 800,
                     outline: 'none',
                     boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)',
+                    boxSizing: 'border-box',
                   }}
                 />
               </div>
@@ -165,17 +161,20 @@ export function ForgotPasswordPage() {
                 disabled={isLoading}
                 style={{
                   width: '100%',
-                  backgroundColor: '#25a168',
+                  backgroundColor: '#2bb673',
                   color: '#ffffff',
                   border: 'none',
-                  borderRadius: '14px',
-                  padding: '14px',
-                  fontSize: '15px',
-                  fontWeight: 700,
+                  borderRadius: '9999px',
+                  padding: '13px 20px',
+                  fontSize: '13.5px',
+                  fontWeight: 900,
+                  letterSpacing: '0.02em',
+                  textTransform: 'uppercase',
                   cursor: isLoading ? 'not-allowed' : 'pointer',
-                  boxShadow: '0 4px 16px rgba(37, 161, 104, 0.4)',
+                  boxShadow: '0 4px 16px rgba(43, 182, 115, 0.4)',
                   transition: 'background-color 0.15s ease',
-                  marginTop: '8px',
+                  marginTop: '4px',
+                  boxSizing: 'border-box',
                 }}
               >
                 {isLoading ? 'Sending Link...' : 'Send Reset Link'}
