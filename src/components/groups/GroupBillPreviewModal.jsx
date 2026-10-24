@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Modal } from '../common/Modal';
+import { useTheme } from '../../context/ThemeContext';
 import { formatPaise, formatDate, formatRelativeTime } from '../../utils/formatters';
 import {
   Receipt,
@@ -12,6 +13,8 @@ import {
 } from 'lucide-react';
 
 export function GroupBillPreviewModal({ isOpen, onClose, billData }) {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   useEffect(() => {
     if (isOpen && billData) {
       try {
@@ -80,22 +83,22 @@ export function GroupBillPreviewModal({ isOpen, onClose, billData }) {
         {/* Digital Receipt Card */}
         <div
           style={{
-            backgroundColor: '#040705',
-            border: '1px dashed rgba(0, 230, 118, 0.35)',
+            backgroundColor: isLight ? '#f8fafc' : '#040705',
+            border: isLight ? '1px dashed rgba(0, 230, 118, 0.5)' : '1px dashed rgba(0, 230, 118, 0.35)',
             borderRadius: '18px',
             padding: '24px 22px',
             position: 'relative',
           }}
         >
           {/* Header */}
-          <div style={{ textAlign: 'center', borderBottom: '1px dashed rgba(255, 255, 255, 0.08)', paddingBottom: '16px', marginBottom: '16px' }}>
+          <div style={{ textAlign: 'center', borderBottom: isLight ? '1px dashed #e2e8f0' : '1px dashed rgba(255, 255, 255, 0.08)', paddingBottom: '16px', marginBottom: '16px' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#00e676', marginBottom: '4px' }}>
               <Receipt size={18} />
               <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                 TANDEM ARC LEDGER INVOICE
               </span>
             </div>
-            <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#ffffff', margin: '4px 0', letterSpacing: '-0.02em' }}>
+            <h2 style={{ fontSize: 'clamp(20px, 3.5vw, 24px)', fontWeight: 900, color: 'var(--text-primary)', margin: '4px 0', letterSpacing: '-0.02em' }}>
               {billData.groupName}
             </h2>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', fontSize: '12px', color: '#6d7f75' }}>

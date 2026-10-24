@@ -33,6 +33,8 @@ export function Topbar({ onOpenAddExpense, onOpenMobileDrawer }) {
   const navigate = useNavigate();
   const location = useLocation();
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/';
+  const isSolo = location.pathname === '/solo' || location.pathname === '/personal-trips';
+  const isMerged = isDashboard || isSolo;
 
   const navLinks = [
     { label: 'Vault', path: '/dashboard' },
@@ -45,26 +47,26 @@ export function Topbar({ onOpenAddExpense, onOpenMobileDrawer }) {
     <header
       style={{
         height: '66px',
-        backgroundColor: isDashboard
+        backgroundColor: isMerged
           ? 'transparent'
           : (isLight ? 'rgba(255, 255, 255, 0.98)' : '#000000'),
-        backdropFilter: isDashboard ? 'none' : 'blur(16px)',
-        WebkitBackdropFilter: isDashboard ? 'none' : 'blur(16px)',
-        borderBottom: isDashboard
+        backdropFilter: isMerged ? 'none' : 'blur(16px)',
+        WebkitBackdropFilter: isMerged ? 'none' : 'blur(16px)',
+        borderBottom: isMerged
           ? 'none'
           : (isLight ? `1.5px solid ${currentAccent?.primary || '#f59e0b'}30` : `1.5px solid ${currentAccent?.primary || '#f59e0b'}44`),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 20px',
-        position: isDashboard ? 'absolute' : 'sticky',
+        position: isMerged ? 'absolute' : 'sticky',
         top: 0,
         left: 0,
         right: 0,
         width: '100%',
         boxSizing: 'border-box',
         zIndex: 40,
-        boxShadow: isDashboard
+        boxShadow: isMerged
           ? 'none'
           : (isLight ? `0 2px 14px ${currentAccent?.glow || 'rgba(0, 0, 0, 0.03)'}` : '0 4px 25px rgba(0, 0, 0, 0.95)'),
         transition: 'background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
@@ -78,18 +80,18 @@ export function Topbar({ onOpenAddExpense, onOpenMobileDrawer }) {
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            backgroundColor: isDashboard
+            backgroundColor: isMerged
               ? (isLight ? 'rgba(255, 255, 255, 0.72)' : 'rgba(24, 24, 27, 0.85)')
               : (isLight ? '#f1f5f9' : '#18181b'),
-            border: isDashboard
+            border: isMerged
               ? (isLight ? '1px solid rgba(255, 255, 255, 0.9)' : '1px solid rgba(255, 255, 255, 0.16)')
               : (isLight ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.14)'),
-            backdropFilter: isDashboard ? 'blur(12px)' : 'none',
-            WebkitBackdropFilter: isDashboard ? 'blur(12px)' : 'none',
+            backdropFilter: isMerged ? 'blur(12px)' : 'none',
+            WebkitBackdropFilter: isMerged ? 'blur(12px)' : 'none',
             borderRadius: '9999px',
             padding: '6px 16px 6px 6px',
             cursor: 'pointer',
-            boxShadow: isDashboard
+            boxShadow: isMerged
               ? '0 2px 10px rgba(0, 0, 0, 0.06)'
               : (isLight ? '0 1px 2px rgba(0,0,0,0.03)' : '0 2px 10px rgba(0, 0, 0, 0.4)'),
             transition: 'all 0.15s ease',
@@ -216,21 +218,21 @@ export function Topbar({ onOpenAddExpense, onOpenMobileDrawer }) {
             width: '38px',
             height: '38px',
             borderRadius: '50%',
-            backgroundColor: isDashboard
+            backgroundColor: isMerged
               ? (isLight ? 'rgba(255, 255, 255, 0.72)' : 'rgba(24, 24, 27, 0.85)')
               : (isLight ? '#f1f5f9' : '#18181b'),
-            border: isDashboard
+            border: isMerged
               ? (isLight ? '1px solid rgba(255, 255, 255, 0.9)' : '1px solid rgba(255, 255, 255, 0.16)')
               : (isLight ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.14)'),
-            backdropFilter: isDashboard ? 'blur(12px)' : 'none',
-            WebkitBackdropFilter: isDashboard ? 'blur(12px)' : 'none',
+            backdropFilter: isMerged ? 'blur(12px)' : 'none',
+            WebkitBackdropFilter: isMerged ? 'blur(12px)' : 'none',
             color: isLight ? '#d97706' : '#facc15',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
-            boxShadow: isDashboard ? '0 2px 8px rgba(0, 0, 0, 0.06)' : (isLight ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'),
+            boxShadow: isMerged ? '0 2px 8px rgba(0, 0, 0, 0.06)' : (isLight ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'),
           }}
           title={isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
           aria-label="Toggle light/dark mode"
@@ -250,21 +252,21 @@ export function Topbar({ onOpenAddExpense, onOpenMobileDrawer }) {
               width: '38px',
               height: '38px',
               borderRadius: '50%',
-              backgroundColor: isDashboard
+              backgroundColor: isMerged
                 ? (isLight ? 'rgba(255, 255, 255, 0.72)' : 'rgba(24, 24, 27, 0.85)')
                 : (isLight ? '#f1f5f9' : '#18181b'),
-              border: isDashboard
+              border: isMerged
                 ? (isLight ? '1px solid rgba(255, 255, 255, 0.9)' : '1px solid rgba(255, 255, 255, 0.16)')
                 : (isLight ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.14)'),
-              backdropFilter: isDashboard ? 'blur(12px)' : 'none',
-              WebkitBackdropFilter: isDashboard ? 'blur(12px)' : 'none',
+              backdropFilter: isMerged ? 'blur(12px)' : 'none',
+              WebkitBackdropFilter: isMerged ? 'blur(12px)' : 'none',
               color: isLight ? '#334155' : 'rgba(255, 255, 255, 0.85)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               position: 'relative',
-              boxShadow: isDashboard ? '0 2px 8px rgba(0, 0, 0, 0.06)' : (isLight ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'),
+              boxShadow: isMerged ? '0 2px 8px rgba(0, 0, 0, 0.06)' : (isLight ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'),
               transition: 'all 0.15s ease',
             }}
             title="Theme Palette"
@@ -561,20 +563,20 @@ export function Topbar({ onOpenAddExpense, onOpenMobileDrawer }) {
             width: '38px',
             height: '38px',
             borderRadius: '50%',
-            backgroundColor: isDashboard
+            backgroundColor: isMerged
               ? (isLight ? 'rgba(255, 255, 255, 0.72)' : 'rgba(24, 24, 27, 0.85)')
               : (isLight ? '#f1f5f9' : '#18181b'),
-            border: isDashboard
+            border: isMerged
               ? (isLight ? '1px solid rgba(255, 255, 255, 0.9)' : `1px solid ${currentAccent?.primary || '#f59e0b'}55`)
               : (isLight ? `1px solid ${currentAccent?.primary || '#f59e0b'}44` : `1px solid ${currentAccent?.primary || '#f59e0b'}55`),
-            backdropFilter: isDashboard ? 'blur(12px)' : 'none',
-            WebkitBackdropFilter: isDashboard ? 'blur(12px)' : 'none',
+            backdropFilter: isMerged ? 'blur(12px)' : 'none',
+            WebkitBackdropFilter: isMerged ? 'blur(12px)' : 'none',
             color: isLight ? (currentAccent?.dark || '#0f172a') : (currentAccent?.light || '#ffffff'),
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            boxShadow: isDashboard ? '0 2px 8px rgba(0, 0, 0, 0.06)' : (isLight ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'),
+            boxShadow: isMerged ? '0 2px 8px rgba(0, 0, 0, 0.06)' : (isLight ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'),
           }}
           aria-label="Open mobile navigation menu"
         >

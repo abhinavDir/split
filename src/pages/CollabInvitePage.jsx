@@ -102,9 +102,10 @@ export function CollabInvitePage() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          backgroundColor: isLight ? '#f8fafc' : '#000000',
         }}
       >
-        <div style={{ width: '420px', maxWidth: '90%', height: '280px', borderRadius: '22px', backgroundColor: '#070c09', border: '1px solid rgba(255,255,255,0.06)' }} />
+        <div className="skeleton" style={{ width: '420px', maxWidth: '90%', height: '280px', borderRadius: '22px' }} />
       </div>
     );
   }

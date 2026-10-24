@@ -98,7 +98,7 @@ export function CreateGroupModal({ isOpen, onClose }) {
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
         <div>
-          <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          <label style={{ display: 'block', fontSize: '12px', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Envelope Title *
           </label>
           <input
@@ -111,11 +111,12 @@ export function CreateGroupModal({ isOpen, onClose }) {
             style={{
               width: '100%',
               backgroundColor: 'var(--bg-input)',
-              border: '1px solid var(--border-medium)',
+              border: '1.5px solid var(--border-medium)',
               borderRadius: '9999px',
               padding: '12px 18px',
               color: 'var(--text-primary)',
               fontSize: '14px',
+              fontWeight: 800,
               outline: 'none',
               boxSizing: 'border-box',
               transition: 'border-color 0.15s ease',
@@ -126,7 +127,7 @@ export function CreateGroupModal({ isOpen, onClose }) {
         </div>
 
         <div>
-          <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          <label style={{ display: 'block', fontSize: '12px', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Category
           </label>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
@@ -161,7 +162,7 @@ export function CreateGroupModal({ isOpen, onClose }) {
         </div>
 
         <div>
-          <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          <label style={{ display: 'block', fontSize: '12px', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Description (Optional)
           </label>
           <input
@@ -172,11 +173,12 @@ export function CreateGroupModal({ isOpen, onClose }) {
             style={{
               width: '100%',
               backgroundColor: 'var(--bg-input)',
-              border: '1px solid var(--border-medium)',
+              border: '1.5px solid var(--border-medium)',
               borderRadius: '9999px',
               padding: '12px 18px',
               color: 'var(--text-primary)',
               fontSize: '14px',
+              fontWeight: 800,
               outline: 'none',
               boxSizing: 'border-box',
               transition: 'border-color 0.15s ease',
@@ -189,7 +191,7 @@ export function CreateGroupModal({ isOpen, onClose }) {
         {/* Initial Members */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <label style={{ fontSize: '11px', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
+            <label style={{ fontSize: '12px', fontWeight: 900, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0 }}>
               Initial Collaborators (Optional)
             </label>
             <button
@@ -200,7 +202,7 @@ export function CreateGroupModal({ isOpen, onClose }) {
                 border: 'none',
                 color: 'var(--accent-primary)',
                 fontSize: '12px',
-                fontWeight: 700,
+                fontWeight: 900,
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -282,12 +284,12 @@ export function CreateGroupModal({ isOpen, onClose }) {
             onClick={onClose}
             disabled={isLoading}
             style={{
-              padding: '10px 20px',
+              padding: '10px 22px',
               borderRadius: '9999px',
               backgroundColor: 'var(--bg-tertiary)',
               border: '1px solid var(--border-medium)',
               color: 'var(--text-secondary)',
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: '13px',
               cursor: 'pointer',
             }}
@@ -300,16 +302,16 @@ export function CreateGroupModal({ isOpen, onClose }) {
             style={{
               padding: '10px 24px',
               borderRadius: '9999px',
-              backgroundColor: 'var(--accent-primary)',
-              color: '#ffffff',
-              fontWeight: 800,
+              backgroundColor: 'var(--accent-primary, #00e676)',
+              color: '#000000',
+              fontWeight: 900,
               fontSize: '13px',
               border: 'none',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              boxShadow: '0 2px 10px var(--accent-glow)',
+              boxShadow: '0 2px 10px rgba(0, 230, 118, 0.35)',
             }}
           >
             <FolderPlus size={16} strokeWidth={2.5} />

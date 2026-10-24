@@ -15,6 +15,7 @@ import {
   ArrowRight,
   ShieldCheck,
   Sparkles,
+  Compass,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useExpenseGroup } from '../../context/ExpenseGroupContext';
@@ -44,6 +45,7 @@ export function MobileDrawer({ isOpen, onClose, onOpenAddExpense, onOpenCreateGr
 
   const navItems = [
     { label: 'Vault', path: '/dashboard', icon: LayoutDashboard, desc: 'Cockpit & Syndicate Balances' },
+    { label: 'Solo Trip Tracker', path: '/solo', icon: Compass, desc: 'Personal travel investment & spend' },
     { label: 'Activity & Audit', path: '/activity', icon: History, desc: 'Real-time ledger audit trail' },
     { label: 'Shared Envelopes', path: '/groups', icon: Users, desc: 'Allocated pools & trips', badge: groups.length },
     { label: 'Analytics & Settle', path: '/settlements', icon: Scale, desc: 'P2P UPI clearinghouse' },

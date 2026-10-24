@@ -4,6 +4,7 @@ import { useExpenseGroup } from '../context/ExpenseGroupContext';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useSocket } from '../context/SocketContext';
+import { Modal } from '../components/common/Modal';
 import { MemberAvatar } from '../components/common/MemberAvatar';
 import { InviteMemberModal } from '../components/groups/InviteMemberModal';
 import { SettleDebtModal } from '../components/settlements/SettleDebtModal';
@@ -61,6 +62,7 @@ export function GroupDetailPage() {
   const [directLoading, setDirectLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [isTogglingStatus, setIsTogglingStatus] = useState(false);
+  const [isConfirmCompleteOpen, setIsConfirmCompleteOpen] = useState(false);
 
   // Directly fetch group if not already loaded in context
   useEffect(() => {
@@ -108,10 +110,12 @@ export function GroupDetailPage() {
     }
   };
 
-  const handleCompleteTrip = async () => {
-    if (!window.confirm('Complete this trip? Once completed, new expenses cannot be added.')) {
-      return;
-    }
+  const handleCompleteTrip = () => {
+    setIsConfirmCompleteOpen(true);
+  };
+
+  const confirmCompleteTrip = async () => {
+    setIsConfirmCompleteOpen(false);
     setIsTogglingStatus(true);
     try {
       const res = await groupService.completeTrip(groupId);
@@ -120,6 +124,17 @@ export function GroupDetailPage() {
       }
       await refreshGroups();
       await fetchGroupData(groupId);
+
+      // Automatically generate and broadcast full bill so everyone sees the bill on completion
+      try {
+        const billRes = await groupService.broadcastBill(groupId);
+        const bill = billRes.data?.bill || billRes.bill;
+        if (bill) {
+          window.dispatchEvent(new CustomEvent('group:bill-preview', { detail: bill }));
+        }
+      } catch (billErr) {
+        console.error('Error generating final bill:', billErr);
+      }
     } catch (err) {
       alert(err.response?.data?.error?.message || err.message || 'Failed to complete trip');
     } finally {
@@ -184,9 +199,9 @@ export function GroupDetailPage() {
   // Loading skeleton state
   if ((loading || directLoading) && !group) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <div style={{ height: '180px', backgroundColor: '#070c09', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.06)' }} />
-        <div style={{ height: '260px', backgroundColor: '#070c09', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.06)' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+        <div className="skeleton" style={{ height: '180px', borderRadius: '22px' }} />
+        <div className="skeleton" style={{ height: '260px', borderRadius: '22px' }} />
       </div>
     );
   }
@@ -198,8 +213,8 @@ export function GroupDetailPage() {
 
   if (!group) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <div style={{ height: '180px', backgroundColor: '#070c09', borderRadius: '20px' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+        <div className="skeleton" style={{ height: '180px', borderRadius: '22px' }} />
       </div>
     );
   }
@@ -426,21 +441,22 @@ export function GroupDetailPage() {
                   onClick={handleBroadcastBill}
                   disabled={isBroadcasting}
                   style={{
-                    padding: '10px 18px',
+                    padding: '10px 20px',
                     borderRadius: '9999px',
                     backgroundColor: isLight ? '#ecfdf5' : '#0a120e',
-                    border: '1px solid rgba(0, 230, 118, 0.3)',
-                    color: '#059669',
+                    border: '1.5px solid rgba(0, 230, 118, 0.4)',
+                    color: isLight ? '#059669' : '#00e676',
                     fontSize: '13px',
-                    fontWeight: 700,
+                    fontWeight: 900,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '6px',
+                    gap: '7px',
+                    boxShadow: '0 2px 12px rgba(0, 230, 118, 0.2)',
                   }}
                 >
-                  <Receipt size={15} />
-                  <span>{isBroadcasting ? 'Generating...' : '⚡ Itemized Bill'}</span>
+                  <Receipt size={16} strokeWidth={2.4} />
+                  <span>{isBroadcasting ? 'Generating Bill...' : 'View Final Bill 🧾'}</span>
                 </button>
 
                 {isAdmin && (
@@ -1144,6 +1160,10 @@ export function GroupDetailPage() {
         <AddExpenseModal
           isOpen={isAddExpenseOpen}
           onClose={() => setIsAddExpenseOpen(false)}
+          onOpenCreateGroup={() => {
+            setIsAddExpenseOpen(false);
+            navigate('/groups');
+          }}
         />
       )}
 
@@ -1171,6 +1191,91 @@ export function GroupDetailPage() {
           transfer={selectedTransferForPayment}
           onPaymentRecorded={() => fetchGroupData(group._id)}
         />
+      )}
+
+      {/* Confirmation Modal: Complete Trip & Finalize All Settlements */}
+      {isConfirmCompleteOpen && (
+        <Modal
+          isOpen={isConfirmCompleteOpen}
+          onClose={() => setIsConfirmCompleteOpen(false)}
+          title="Complete Trip & Settle All Accounts ⚡"
+          subtitle="Finalize this envelope and generate the master itemized ledger"
+          maxWidth="480px"
+        >
+          <div style={{ textAlign: 'center', padding: '10px 4px 6px 4px' }}>
+            <div
+              style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '20px',
+                backgroundColor: 'rgba(0, 230, 118, 0.12)',
+                border: '1px solid rgba(0, 230, 118, 0.3)',
+                color: '#00e676',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 16px auto',
+                boxShadow: '0 4px 16px rgba(0, 230, 118, 0.2)',
+              }}
+            >
+              <CheckCircle2 size={32} strokeWidth={2.4} />
+            </div>
+
+            <h3 style={{ fontSize: '18px', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '8px' }}>
+              Are you sure you want to complete this trip?
+            </h3>
+
+            <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.55, marginBottom: '22px' }}>
+              All settlements and balances will be marked as finalized. Once completed, your active dashboard amount will become <strong>0.00 ₹</strong>, and everyone's complete itemized bill will be generated immediately for all members to view.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button
+                type="button"
+                onClick={confirmCompleteTrip}
+                disabled={isTogglingStatus}
+                style={{
+                  width: '100%',
+                  padding: '13px 20px',
+                  borderRadius: '9999px',
+                  backgroundColor: '#00e676',
+                  border: 'none',
+                  color: '#000000',
+                  fontSize: '14px',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 16px rgba(0, 230, 118, 0.35)',
+                }}
+              >
+                <CheckCircle2 size={18} strokeWidth={2.6} />
+                <span>{isTogglingStatus ? 'Finalizing...' : 'Yes, Complete Trip & View Bill 🧾'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsConfirmCompleteOpen(false)}
+                disabled={isTogglingStatus}
+                style={{
+                  width: '100%',
+                  padding: '11px 20px',
+                  borderRadius: '9999px',
+                  backgroundColor: 'transparent',
+                  border: '1px solid var(--border-medium)',
+                  color: 'var(--text-secondary)',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );

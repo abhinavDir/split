@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '../common/Modal';
 import { expenseService } from '../../services/expense.service';
 import { useExpenseGroup } from '../../context/ExpenseGroupContext';
@@ -15,6 +16,7 @@ import {
   MoreHorizontal,
   AlertCircle,
   PlusCircle,
+  FolderPlus,
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -26,9 +28,10 @@ const CATEGORIES = [
   { label: 'Other', icon: MoreHorizontal },
 ];
 
-export function AddExpenseModal({ isOpen, onClose }) {
+export function AddExpenseModal({ isOpen, onClose, onOpenCreateGroup }) {
   const { user } = useAuth();
-  const { groups, activeGroupId, activeGroup, refreshActiveGroup, refreshGroups } = useExpenseGroup();
+  const { groups = [], activeGroupId, activeGroup, refreshActiveGroup, refreshGroups } = useExpenseGroup();
+  const navigate = useNavigate();
 
   const [selectedGroupId, setSelectedGroupId] = useState('');
   const [description, setDescription] = useState('');
@@ -41,9 +44,26 @@ export function AddExpenseModal({ isOpen, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Target group for expense
+  // Active (non-completed) groups
+  const activeGroups = (groups || []).filter((g) => !g.isCompleted);
+  const hasActiveGroup = activeGroups.length > 0;
+  const hasNoGroups = !groups || groups.length === 0;
+  const allGroupsCompleted = groups && groups.length > 0 && activeGroups.length === 0;
+
+  // Target group for expense: prefer currently selected, or active group, or first active group
   const currentGroup =
-    groups.find((g) => g._id === selectedGroupId) || activeGroup || (groups.length > 0 ? groups[0] : null);
+    groups.find((g) => g._id === selectedGroupId) ||
+    (activeGroup && !activeGroup.isCompleted ? activeGroup : null) ||
+    (activeGroups.length > 0 ? activeGroups[0] : (groups.length > 0 ? groups[0] : null));
+
+  const handleCreateGroupClick = () => {
+    onClose();
+    if (onOpenCreateGroup) {
+      onOpenCreateGroup();
+    } else {
+      navigate('/groups');
+    }
+  };
 
   // Initialize defaults on open or group change
   useEffect(() => {
@@ -186,6 +206,95 @@ export function AddExpenseModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
+  if (!hasActiveGroup) {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Create Group First 👥"
+        subtitle="An active group is required to record and split expenses"
+        maxWidth="460px"
+      >
+        <div style={{ textAlign: 'center', padding: '16px 8px 8px 8px' }}>
+          <div
+            style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '20px',
+              backgroundColor: 'rgba(0, 230, 118, 0.12)',
+              border: '1px solid rgba(0, 230, 118, 0.3)',
+              color: 'var(--accent-primary, #00e676)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px auto',
+              boxShadow: '0 4px 16px rgba(0, 230, 118, 0.15)',
+            }}
+          >
+            <FolderPlus size={32} strokeWidth={2.4} />
+          </div>
+
+          <h3 style={{ fontSize: '18px', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '8px' }}>
+            {hasNoGroups ? 'Firstly Create a Group' : 'All Groups Completed'}
+          </h3>
+
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '22px' }}>
+            {hasNoGroups
+              ? 'Firstly create the group before adding expenses. You need an active group with members to split bills.'
+              : 'All your groups are completed and locked. Firstly create a new active group to record new expenses.'}
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <button
+              type="button"
+              onClick={handleCreateGroupClick}
+              style={{
+                width: '100%',
+                padding: '13px 20px',
+                borderRadius: '9999px',
+                backgroundColor: 'var(--accent-primary, #00e676)',
+                border: 'none',
+                color: '#000000',
+                fontSize: '14px',
+                fontWeight: 900,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                boxShadow: '0 4px 16px rgba(0, 230, 118, 0.35)',
+                transition: 'transform 0.15s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.02)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              <PlusCircle size={18} />
+              <span>+ Create Group</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                width: '100%',
+                padding: '11px 20px',
+                borderRadius: '9999px',
+                backgroundColor: 'transparent',
+                border: '1px solid var(--border-medium)',
+                color: 'var(--text-secondary)',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -246,9 +355,43 @@ export function AddExpenseModal({ isOpen, onClose }) {
             ))}
           </select>
           {currentGroup?.isCompleted && (
-            <p style={{ color: '#f43f5e', fontSize: '12px', marginTop: '6px', fontWeight: 700 }}>
-              ⚠️ This envelope is finalized and locked. New splits cannot be recorded.
-            </p>
+            <div
+              style={{
+                marginTop: '10px',
+                padding: '12px 14px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                border: '1px solid rgba(244, 63, 94, 0.25)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}
+            >
+              <p style={{ color: '#f43f5e', fontSize: '13px', fontWeight: 800, margin: 0 }}>
+                ⚠️ This envelope is finalized and locked. Firstly create a new group or select an active group to record expenses.
+              </p>
+              <button
+                type="button"
+                onClick={handleCreateGroupClick}
+                style={{
+                  alignSelf: 'flex-start',
+                  padding: '7px 16px',
+                  borderRadius: '9999px',
+                  backgroundColor: 'var(--accent-primary, #00e676)',
+                  border: 'none',
+                  color: '#000000',
+                  fontSize: '12px',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+              >
+                <PlusCircle size={14} />
+                <span>+ Create Group</span>
+              </button>
+            </div>
           )}
         </div>
 

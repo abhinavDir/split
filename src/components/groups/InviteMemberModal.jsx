@@ -74,13 +74,13 @@ export function InviteMemberModal({ isOpen, onClose, group }) {
             border: '1px solid rgba(244, 63, 94, 0.25)',
             borderRadius: '16px',
             textAlign: 'center',
-            color: '#ffffff',
+            color: 'var(--text-primary)',
           }}
         >
           <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#f43f5e', marginBottom: '8px' }}>
             Envelope Finalized & Locked
           </h3>
-          <p style={{ fontSize: '13px', color: '#8899a6', lineHeight: 1.5, margin: 0 }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
             This envelope has been settled and finalized. New collaborators cannot be added to a closed ledger.
           </p>
         </div>
@@ -90,18 +90,18 @@ export function InviteMemberModal({ isOpen, onClose, group }) {
           <div
             style={{
               padding: '16px',
-              backgroundColor: '#040705',
+              backgroundColor: 'var(--bg-tertiary)',
               borderRadius: '16px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              border: '1px solid var(--border-subtle)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
               <LinkIcon size={15} style={{ color: '#00e676' }} />
-              <span style={{ fontSize: '12px', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Instant Vault Invite Link
               </span>
             </div>
-            <p style={{ fontSize: '12px', color: '#8899a6', marginBottom: '12px', margin: '0 0 12px 0' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px', margin: '0 0 12px 0' }}>
               Anyone with this link can join this envelope and access shared ledger entries.
             </p>
 

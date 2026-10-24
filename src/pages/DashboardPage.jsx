@@ -23,6 +23,7 @@ import {
   Search,
   PiggyBank,
   Clock,
+  Compass,
 } from 'lucide-react';
 import { MobileDashboardView } from '../components/dashboard/MobileDashboardView';
 import { OroveraMascot } from '../components/dashboard/OroveraMascot';
@@ -277,38 +278,40 @@ export function DashboardPage() {
 
   if (activeGroup) {
     desktopCurrencyCode = activeGroup.currency || 'INR';
-    const grpBal = balances || allBalances[activeGroup._id];
-    const myMemberBal = grpBal?.memberBalances?.find(
-      (m) => m.userId?.toString() === (user?._id || user?.id)?.toString()
-    );
+    if (activeGroup.isCompleted) {
+      desktopDisplayPaise = 0;
+      desktopStatusBadgeText = 'Settled up';
+      desktopSubtitleText = 'Trip completed & debts cleared';
+      desktopIsReceiving = true;
+    } else {
+      const grpBal = balances || allBalances[activeGroup._id];
+      const myMemberBal = grpBal?.memberBalances?.find(
+        (m) => m.userId?.toString() === (user?._id || user?.id)?.toString()
+      );
 
-    if (myMemberBal) {
-      if (myMemberBal.netBalancePaise > 0) {
-        desktopDisplayPaise = myMemberBal.netBalancePaise;
-        desktopStatusBadgeText = 'Getting funds';
-        desktopSubtitleText = 'Expected to receive';
-        desktopIsReceiving = true;
-      } else if (myMemberBal.netBalancePaise < 0) {
-        desktopDisplayPaise = Math.abs(myMemberBal.netBalancePaise);
-        desktopStatusBadgeText = 'Outgoing debts';
-        desktopSubtitleText = 'Pending to settle';
-        desktopIsReceiving = false;
-      } else if (grpBal?.totalGroupSpendPaise > 0) {
-        desktopDisplayPaise = grpBal.totalGroupSpendPaise;
-        desktopStatusBadgeText = 'Settled up';
-        desktopSubtitleText = 'Group total spent';
-        desktopIsReceiving = true;
+      if (myMemberBal) {
+        if (myMemberBal.netBalancePaise > 0) {
+          desktopDisplayPaise = myMemberBal.netBalancePaise;
+          desktopStatusBadgeText = 'Getting funds';
+          desktopSubtitleText = 'Expected to receive';
+          desktopIsReceiving = true;
+        } else if (myMemberBal.netBalancePaise < 0) {
+          desktopDisplayPaise = Math.abs(myMemberBal.netBalancePaise);
+          desktopStatusBadgeText = 'Outgoing debts';
+          desktopSubtitleText = 'Pending to settle';
+          desktopIsReceiving = false;
+        } else {
+          desktopDisplayPaise = 0;
+          desktopStatusBadgeText = 'Settled up';
+          desktopSubtitleText = 'All debts cleared';
+          desktopIsReceiving = true;
+        }
       } else {
         desktopDisplayPaise = 0;
         desktopStatusBadgeText = 'Settled up';
         desktopSubtitleText = 'All debts cleared';
         desktopIsReceiving = true;
       }
-    } else if (grpBal?.totalGroupSpendPaise > 0) {
-      desktopDisplayPaise = grpBal.totalGroupSpendPaise;
-      desktopStatusBadgeText = 'Group volume';
-      desktopSubtitleText = 'Total group expenditure';
-      desktopIsReceiving = true;
     }
   } else {
     if (aggregateOwedToYouPaise > 0) {
@@ -321,11 +324,6 @@ export function DashboardPage() {
       desktopStatusBadgeText = 'Outgoing debts';
       desktopSubtitleText = 'Pending to settle';
       desktopIsReceiving = false;
-    } else if (totalOverallSpendPaise > 0) {
-      desktopDisplayPaise = totalOverallSpendPaise;
-      desktopStatusBadgeText = 'Vault volume';
-      desktopSubtitleText = 'Total pooled expenditure';
-      desktopIsReceiving = true;
     } else {
       desktopDisplayPaise = 0;
       desktopStatusBadgeText = 'Settled up';
@@ -338,7 +336,7 @@ export function DashboardPage() {
   const desktopDecimalNumber = (Math.abs(desktopDisplayPaise) % 100).toString().padStart(2, '0');
   const desktopCurrencySymbol = desktopCurrencyCode === 'EUR' ? '€' : desktopCurrencyCode === 'USD' ? '$' : '₹';
   const desktopPendingCount = activeGroup
-    ? (balances?.suggestedTransfers || allBalances[activeGroup._id]?.suggestedTransfers || []).length
+    ? (activeGroup.isCompleted ? 0 : (balances?.suggestedTransfers || allBalances[activeGroup._id]?.suggestedTransfers || []).length)
     : (incomingTransfers?.length || 0) + (outgoingTransfers?.length || 0);
 
   // Desktop real transaction list
@@ -791,6 +789,118 @@ export function DashboardPage() {
                 Stats
               </span>
             </div>
+
+            {/* Button 5: Solo Trip */}
+            <div
+              onClick={() => navigate('/solo')}
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+            >
+              <div
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  backgroundColor: currentAccent?.primary || '#f59e0b',
+                  color: accent === 'amber' ? '#000000' : '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: `0 4px 16px ${currentAccent?.glow || 'rgba(245, 158, 11, 0.4)'}`,
+                  transition: 'transform 0.15s ease',
+                }}
+              >
+                <Compass size={22} strokeWidth={2.8} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '14px', fontWeight: 900, color: isLight ? '#0f172a' : '#ffffff', lineHeight: 1.1 }}>
+                  Solo Trip
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, color: isLight ? '#715509' : '#9ca3af' }}>
+                  Personal Spend
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ================= 1B. FEATURED SOLO TRIP BANNER (DESKTOP) ================= */}
+        <div
+          onClick={() => navigate('/solo')}
+          style={{
+            marginBottom: '26px',
+            padding: '18px 24px',
+            borderRadius: '20px',
+            backgroundColor: isLight ? '#ffffff' : '#0e1115',
+            border: isLight
+              ? `1.5px solid ${currentAccent?.primary || '#f59e0b'}35`
+              : `1px solid ${currentAccent?.primary || '#f59e0b'}40`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '20px',
+            cursor: 'pointer',
+            boxShadow: isLight ? '0 4px 18px rgba(0, 0, 0, 0.04)' : '0 10px 30px rgba(0, 0, 0, 0.6)',
+            transition: 'transform 0.15s ease',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
+            <div
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '14px',
+                backgroundColor: currentAccent?.primary || '#f59e0b',
+                color: accent === 'amber' ? '#000000' : '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: `0 4px 14px ${currentAccent?.glow || 'rgba(245, 158, 11, 0.35)'}`,
+                flexShrink: 0,
+              }}
+            >
+              <Compass size={24} strokeWidth={2.6} />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '16px', fontWeight: 900, color: isLight ? '#0f172a' : '#ffffff' }}>
+                  Personal Solo Trip & Investment Tracker
+                </span>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    fontWeight: 900,
+                    textTransform: 'uppercase',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    backgroundColor: isLight ? '#fef3c7' : '#1c2229',
+                    color: currentAccent?.primary || '#f59e0b',
+                  }}
+                >
+                  Personal Mode
+                </span>
+              </div>
+              <p style={{ fontSize: '13px', fontWeight: 700, color: isLight ? '#64748b' : '#9ca3af', margin: '4px 0 0 0' }}>
+                Solo traveler? Track personal travel budgets, destination investments, and itemized personal bills without group splits.
+              </p>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '8px 16px',
+              borderRadius: '12px',
+              backgroundColor: isLight ? '#f1f5f9' : '#161b22',
+              color: isLight ? '#0f172a' : '#ffffff',
+              fontSize: '13px',
+              fontWeight: 800,
+              flexShrink: 0,
+            }}
+          >
+            <span>Open Solo Hub</span>
+            <ArrowRight size={16} strokeWidth={2.8} />
           </div>
         </div>
 

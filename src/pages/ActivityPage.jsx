@@ -76,7 +76,7 @@ export function ActivityPage() {
               IMMUTABLE CHRONOLOGICAL AUDIT
             </span>
           </div>
-          <h1 style={{ fontSize: '28px', fontWeight: 900, color: isLight ? '#0f172a' : '#ffffff', letterSpacing: '-0.03em', margin: 0 }}>
+          <h1 style={{ fontSize: 'clamp(20px, 3.8vw, 28px)', fontWeight: 900, color: isLight ? '#0f172a' : '#ffffff', letterSpacing: '-0.03em', margin: 0 }}>
             Activity & Audit Trail
           </h1>
           <p style={{ fontSize: '14px', color: isLight ? '#64748b' : '#9ca3af', marginTop: '4px', margin: 0, fontWeight: 700 }}>

@@ -24,6 +24,7 @@ import {
   Scale,
   FolderPlus,
   History,
+  Compass,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { OroveraMascot, PeekMascot } from './OroveraMascot';
@@ -73,39 +74,41 @@ export function MobileDashboardView({
 
   if (activeGroup) {
     currencyCode = activeGroup.currency || 'INR';
-    // Look up user's balance in this active group
-    const grpBal = balances || allBalances[activeGroup._id];
-    const myMemberBal = grpBal?.memberBalances?.find(
-      (m) => m.userId?.toString() === currentUserId
-    );
+    if (activeGroup.isCompleted) {
+      displayPaise = 0;
+      statusBadgeText = 'Settled up';
+      subtitleText = 'Trip completed & debts cleared';
+      isReceiving = true;
+    } else {
+      // Look up user's balance in this active group
+      const grpBal = balances || allBalances[activeGroup._id];
+      const myMemberBal = grpBal?.memberBalances?.find(
+        (m) => m.userId?.toString() === currentUserId
+      );
 
-    if (myMemberBal) {
-      if (myMemberBal.netBalancePaise > 0) {
-        displayPaise = myMemberBal.netBalancePaise;
-        statusBadgeText = 'Getting funds';
-        subtitleText = 'Expected to receive';
-        isReceiving = true;
-      } else if (myMemberBal.netBalancePaise < 0) {
-        displayPaise = Math.abs(myMemberBal.netBalancePaise);
-        statusBadgeText = 'Outgoing debts';
-        subtitleText = 'Pending to settle';
-        isReceiving = false;
-      } else if (grpBal?.totalGroupSpendPaise > 0) {
-        displayPaise = grpBal.totalGroupSpendPaise;
-        statusBadgeText = 'Settled up';
-        subtitleText = 'Group total spent';
-        isReceiving = true;
+      if (myMemberBal) {
+        if (myMemberBal.netBalancePaise > 0) {
+          displayPaise = myMemberBal.netBalancePaise;
+          statusBadgeText = 'Getting funds';
+          subtitleText = 'Expected to receive';
+          isReceiving = true;
+        } else if (myMemberBal.netBalancePaise < 0) {
+          displayPaise = Math.abs(myMemberBal.netBalancePaise);
+          statusBadgeText = 'Outgoing debts';
+          subtitleText = 'Pending to settle';
+          isReceiving = false;
+        } else {
+          displayPaise = 0;
+          statusBadgeText = 'Settled up';
+          subtitleText = 'All debts cleared';
+          isReceiving = true;
+        }
       } else {
         displayPaise = 0;
         statusBadgeText = 'Settled up';
         subtitleText = 'All debts cleared';
         isReceiving = true;
       }
-    } else if (grpBal?.totalGroupSpendPaise > 0) {
-      displayPaise = grpBal.totalGroupSpendPaise;
-      statusBadgeText = 'Group volume';
-      subtitleText = 'Total group expenditure';
-      isReceiving = true;
     }
   } else {
     // Pooled / All Envelopes view
@@ -119,11 +122,6 @@ export function MobileDashboardView({
       statusBadgeText = 'Outgoing debts';
       subtitleText = 'Pending to settle';
       isReceiving = false;
-    } else if (totalOverallSpendPaise > 0) {
-      displayPaise = totalOverallSpendPaise;
-      statusBadgeText = 'Vault volume';
-      subtitleText = 'Total pooled expenditure';
-      isReceiving = true;
     } else {
       displayPaise = 0;
       statusBadgeText = 'Settled up';
@@ -141,8 +139,12 @@ export function MobileDashboardView({
   // =========================================================================
   let pendingCount = 0;
   if (activeGroup) {
-    const grpBal = balances || allBalances[activeGroup._id];
-    pendingCount = (grpBal?.suggestedTransfers || []).length;
+    if (activeGroup.isCompleted) {
+      pendingCount = 0;
+    } else {
+      const grpBal = balances || allBalances[activeGroup._id];
+      pendingCount = (grpBal?.suggestedTransfers || []).length;
+    }
   } else {
     pendingCount = (incomingTransfers?.length || 0) + (outgoingTransfers?.length || 0);
   }
@@ -583,7 +585,7 @@ export function MobileDashboardView({
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '12px',
+            gap: '8px',
             margin: '8px 0 24px 0',
             textAlign: 'center',
           }}
@@ -591,12 +593,12 @@ export function MobileDashboardView({
           {/* Button 1: Add Expense */}
           <div
             onClick={onOpenAddExpense}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
           >
             <div
               style={{
-                width: '56px',
-                height: '56px',
+                width: 'clamp(46px, 12vw, 56px)',
+                height: 'clamp(46px, 12vw, 56px)',
                 borderRadius: '50%',
                 backgroundColor: currentAccent?.primary || '#f59e0b',
                 color: accent === 'amber' ? '#000000' : '#ffffff',
@@ -608,9 +610,9 @@ export function MobileDashboardView({
                 transition: 'transform 0.15s ease',
               }}
             >
-              <Plus size={24} strokeWidth={3} />
+              <Plus size={22} strokeWidth={3} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 'clamp(10px, 2.7vw, 12px)', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap' }}>
               Add Expense
             </span>
           </div>
@@ -618,12 +620,12 @@ export function MobileDashboardView({
           {/* Button 2: Settle Up */}
           <div
             onClick={() => navigate('/settlements')}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
           >
             <div
               style={{
-                width: '56px',
-                height: '56px',
+                width: 'clamp(46px, 12vw, 56px)',
+                height: 'clamp(46px, 12vw, 56px)',
                 borderRadius: '50%',
                 backgroundColor: isLight ? '#000000' : '#18181b',
                 border: isLight ? 'none' : '1px solid rgba(255, 255, 255, 0.16)',
@@ -635,9 +637,9 @@ export function MobileDashboardView({
                 transition: 'transform 0.15s ease',
               }}
             >
-              <Scale size={22} strokeWidth={2.4} />
+              <Scale size={20} strokeWidth={2.4} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 'clamp(10px, 2.7vw, 12px)', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap' }}>
               Settle Up
             </span>
           </div>
@@ -645,12 +647,12 @@ export function MobileDashboardView({
           {/* Button 3: New Group */}
           <div
             onClick={onOpenCreateGroup}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
           >
             <div
               style={{
-                width: '56px',
-                height: '56px',
+                width: 'clamp(46px, 12vw, 56px)',
+                height: 'clamp(46px, 12vw, 56px)',
                 borderRadius: '50%',
                 backgroundColor: isLight ? '#000000' : '#18181b',
                 border: isLight ? 'none' : '1px solid rgba(255, 255, 255, 0.16)',
@@ -662,9 +664,9 @@ export function MobileDashboardView({
                 transition: 'transform 0.15s ease',
               }}
             >
-              <FolderPlus size={22} strokeWidth={2.4} />
+              <FolderPlus size={20} strokeWidth={2.4} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 'clamp(10px, 2.7vw, 12px)', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap' }}>
               New Group
             </span>
           </div>
@@ -672,12 +674,12 @@ export function MobileDashboardView({
           {/* Button 4: Activity */}
           <div
             onClick={() => navigate('/activity')}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
           >
             <div
               style={{
-                width: '56px',
-                height: '56px',
+                width: 'clamp(46px, 12vw, 56px)',
+                height: 'clamp(46px, 12vw, 56px)',
                 borderRadius: '50%',
                 backgroundColor: isLight ? '#000000' : '#18181b',
                 border: isLight ? 'none' : '1px solid rgba(255, 255, 255, 0.16)',
@@ -689,11 +691,102 @@ export function MobileDashboardView({
                 transition: 'transform 0.15s ease',
               }}
             >
-              <History size={22} strokeWidth={2.4} />
+              <History size={20} strokeWidth={2.4} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 'clamp(10px, 2.7vw, 12px)', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap' }}>
               Activity
             </span>
+          </div>
+        </div>
+
+        {/* ================= 5B. FEATURED SOLO TRIP TRACKER BANNER ================= */}
+        <div
+          onClick={() => navigate('/solo')}
+          style={{
+            marginBottom: '20px',
+            padding: '14px 18px',
+            borderRadius: '18px',
+            backgroundColor: isLight ? '#ffffff' : '#121518',
+            border: isLight
+              ? `1.5px solid ${currentAccent?.primary || '#f59e0b'}30`
+              : `1px solid ${currentAccent?.primary || '#f59e0b'}40`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            cursor: 'pointer',
+            boxShadow: isLight ? '0 4px 16px rgba(0, 0, 0, 0.04)' : '0 4px 20px rgba(0, 0, 0, 0.6)',
+            transition: 'transform 0.15s ease',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                backgroundColor: currentAccent?.primary || '#f59e0b',
+                color: accent === 'amber' ? '#000000' : '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: `0 4px 12px ${currentAccent?.glow || 'rgba(245, 158, 11, 0.3)'}`,
+                flexShrink: 0,
+              }}
+            >
+              <Compass size={22} strokeWidth={2.6} />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 900,
+                    color: isLight ? '#0f172a' : '#ffffff',
+                  }}
+                >
+                  Personal Solo Trip
+                </span>
+                <span
+                  style={{
+                    fontSize: '9px',
+                    fontWeight: 900,
+                    textTransform: 'uppercase',
+                    padding: '2px 6px',
+                    borderRadius: '6px',
+                    backgroundColor: isLight ? '#f1f5f9' : '#1e242b',
+                    color: currentAccent?.primary || '#f59e0b',
+                  }}
+                >
+                  Solo Mode
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: 700,
+                  color: isLight ? '#64748b' : '#94a3b8',
+                  margin: '2px 0 0 0',
+                }}
+              >
+                Track personal travel investments & expenses
+              </p>
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              backgroundColor: isLight ? '#f8fafc' : '#1c2229',
+              color: isLight ? '#0f172a' : '#ffffff',
+              flexShrink: 0,
+            }}
+          >
+            <ChevronRight size={16} strokeWidth={3} />
           </div>
         </div>
 

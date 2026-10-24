@@ -29,9 +29,17 @@ api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('split_access_token');
     if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    } else if (config.headers?.Authorization) {
-      delete config.headers.Authorization;
+      if (config.headers?.set) {
+        config.headers.set('Authorization', `Bearer ${accessToken}`);
+      } else {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    } else if (config.headers) {
+      if (config.headers.delete) {
+        config.headers.delete('Authorization');
+      } else {
+        delete config.headers.Authorization;
+      }
     }
     return config;
   },
@@ -98,7 +106,11 @@ api.interceptors.response.use(
           api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
           processQueue(null, newAccessToken);
 
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          if (originalRequest.headers?.set) {
+            originalRequest.headers.set('Authorization', `Bearer ${newAccessToken}`);
+          } else {
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          }
           return api(originalRequest);
         }
       } catch (refreshError) {

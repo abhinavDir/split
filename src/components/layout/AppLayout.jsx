@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Topbar } from './Topbar';
 import { Footer } from './Footer';
 import { MobileNav } from './MobileNav';
@@ -14,8 +14,11 @@ export function AppLayout() {
   const { theme } = useTheme();
   const isLight = theme === 'light';
   const location = useLocation();
+  const navigate = useNavigate();
   const isProfile = location.pathname === '/profile';
-  const isFullBleed = location.pathname === '/dashboard' || location.pathname === '/' || isProfile;
+  const isCreateGroup = location.pathname === '/groups/create' || location.pathname === '/create-group';
+  const isSolo = location.pathname === '/solo' || location.pathname === '/personal-trips';
+  const isFullBleed = location.pathname === '/dashboard' || location.pathname === '/' || isProfile || isCreateGroup || isSolo;
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -50,8 +53,8 @@ export function AppLayout() {
         transition: 'background-color 0.2s ease, color 0.2s ease',
       }}
     >
-      {/* Universal Topbar across all pages (except Profile which has its dedicated header) */}
-      {!isProfile && (
+      {/* Universal Topbar across all pages (hidden on Profile, Create Group, and Solo) */}
+      {!isProfile && !isCreateGroup && !isSolo && (
         <Topbar
           onOpenAddExpense={() => setIsAddExpenseOpen(true)}
           onOpenMobileDrawer={() => setIsMobileDrawerOpen(true)}
@@ -72,16 +75,16 @@ export function AppLayout() {
         <Outlet
           context={{
             onOpenAddExpense: () => setIsAddExpenseOpen(true),
-            onOpenCreateGroup: () => setIsCreateGroupOpen(true),
+            onOpenCreateGroup: () => navigate('/groups/create'),
             onOpenMobileDrawer: () => setIsMobileDrawerOpen(true),
           }}
         />
       </main>
 
-      {/* Website Footer on desktop / Watermark on mobile */}
-      <Footer />
+      {/* Website Footer (hidden on Create Group) */}
+      {!isCreateGroup && <Footer />}
 
-      {/* Mobile Bottom Navigation (Visible only below 768px via .hidden-desktop) */}
+      {/* Mobile Bottom Navigation */}
       <MobileNav />
 
       {/* Slide-in Mobile All-Pages Drawer */}
@@ -94,7 +97,7 @@ export function AppLayout() {
         }}
         onOpenCreateGroup={() => {
           setIsMobileDrawerOpen(false);
-          setIsCreateGroupOpen(true);
+          navigate('/groups/create');
         }}
       />
 
@@ -102,6 +105,10 @@ export function AppLayout() {
       <AddExpenseModal
         isOpen={isAddExpenseOpen}
         onClose={() => setIsAddExpenseOpen(false)}
+        onOpenCreateGroup={() => {
+          setIsAddExpenseOpen(false);
+          navigate('/groups/create');
+        }}
       />
 
       <CreateGroupModal
