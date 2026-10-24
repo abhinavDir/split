@@ -82,6 +82,7 @@ export function SoloTripPage() {
 
   // Modal for setting manual budget and managing different trips
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [settingsModalTab, setSettingsModalTab] = useState('budget'); // 'budget' | 'new'
   const [showTripPickerDropdown, setShowTripPickerDropdown] = useState(false);
 
   // Active Trip resolution
@@ -339,16 +340,20 @@ export function SoloTripPage() {
                     top: 'calc(100% + 8px)',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    width: '260px',
+                    width: '240px',
+                    maxWidth: 'calc(100vw - 32px)',
+                    maxHeight: '280px',
+                    overflowY: 'auto',
                     backgroundColor: isLight ? '#ffffff' : '#111417',
                     border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.16)',
-                    borderRadius: '18px',
-                    padding: '8px',
+                    borderRadius: '16px',
+                    padding: '6px',
                     zIndex: 100,
                     boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
+                    boxSizing: 'border-box',
                   }}
                 >
-                  <div style={{ padding: '6px 10px 8px 10px', fontSize: '11px', fontWeight: 800, color: isLight ? '#64748b' : '#94a3b8' }}>
+                  <div style={{ padding: '4px 8px 6px 8px', fontSize: '10.5px', fontWeight: 800, color: isLight ? '#64748b' : '#94a3b8', letterSpacing: '0.04em' }}>
                     YOUR SOLO TRIPS
                   </div>
                   {trips.map((t) => {
@@ -361,9 +366,9 @@ export function SoloTripPage() {
                           setShowTripPickerDropdown(false);
                         }}
                         style={{
-                          padding: '10px 12px',
-                          borderRadius: '12px',
-                          fontSize: '13px',
+                          padding: '8px 10px',
+                          borderRadius: '10px',
+                          fontSize: '12px',
                           fontWeight: 800,
                           cursor: 'pointer',
                           backgroundColor: isSelected
@@ -376,13 +381,13 @@ export function SoloTripPage() {
                           marginBottom: '2px',
                         }}
                       >
-                        <div>
-                          <div>{t.name}</div>
-                          <div style={{ fontSize: '11px', color: isLight ? '#64748b' : '#94a3b8', fontWeight: 600 }}>
+                        <div style={{ minWidth: 0, paddingRight: '6px' }}>
+                          <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.name}</div>
+                          <div style={{ fontSize: '10.5px', color: isLight ? '#64748b' : '#94a3b8', fontWeight: 600 }}>
                             Budget: ₹{Number(t.budget).toLocaleString('en-IN')}
                           </div>
                         </div>
-                        {isSelected && <Check size={16} strokeWidth={3} color={currentAccent?.primary || '#f59e0b'} />}
+                        {isSelected && <Check size={14} strokeWidth={3} color={currentAccent?.primary || '#f59e0b'} />}
                       </div>
                     );
                   })}
@@ -390,23 +395,24 @@ export function SoloTripPage() {
                   <div
                     onClick={() => {
                       setShowTripPickerDropdown(false);
+                      setSettingsModalTab('new');
                       setShowSettingsModal(true);
                     }}
                     style={{
-                      marginTop: '6px',
-                      padding: '10px 12px',
-                      borderRadius: '12px',
-                      fontSize: '12px',
+                      marginTop: '4px',
+                      padding: '8px 10px',
+                      borderRadius: '10px',
+                      fontSize: '11.5px',
                       fontWeight: 900,
                       cursor: 'pointer',
                       borderTop: isLight ? '1px solid #f1f5f9' : '1px solid rgba(255, 255, 255, 0.08)',
                       color: currentAccent?.primary || '#f59e0b',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '6px',
+                      gap: '5px',
                     }}
                   >
-                    <Plus size={15} strokeWidth={3} />
+                    <Plus size={14} strokeWidth={3} />
                     <span>+ Create New Trip</span>
                   </div>
                 </div>
@@ -415,10 +421,13 @@ export function SoloTripPage() {
 
             {/* Set Manual Budget & Trip Settings Button (Replaced Share Icon) */}
             <button
-              onClick={() => setShowSettingsModal(true)}
+              onClick={() => {
+                setSettingsModalTab('budget');
+                setShowSettingsModal(true);
+              }}
               title="Set Manual Budget & Add Trips"
               style={{
-                padding: '8px 14px',
+                padding: '7px 12px',
                 borderRadius: '9999px',
                 backgroundColor: isLight ? 'rgba(255, 255, 255, 0.85)' : '#181b20',
                 backdropFilter: 'blur(10px)',
@@ -426,14 +435,14 @@ export function SoloTripPage() {
                 color: isLight ? '#0f172a' : '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '5px',
                 cursor: 'pointer',
-                fontSize: '12px',
+                fontSize: '11.5px',
                 fontWeight: 900,
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
               }}
             >
-              <SlidersHorizontal size={15} strokeWidth={2.8} />
+              <SlidersHorizontal size={14} strokeWidth={2.8} />
               <span>Budget</span>
             </button>
           </div>
@@ -487,7 +496,10 @@ export function SoloTripPage() {
             {/* Floating 2-Stat Pill: Budget & Left (Click opens manual budget setting directly) */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '14px' }}>
               <div
-                onClick={() => setShowSettingsModal(true)}
+                onClick={() => {
+                  setSettingsModalTab('budget');
+                  setShowSettingsModal(true);
+                }}
                 title="Click to set manual budget"
                 style={{
                   backgroundColor: isLight ? 'rgba(255, 255, 255, 0.8)' : '#181b20',
@@ -821,7 +833,7 @@ export function SoloTripPage() {
       </div>
 
       {/* =========================================================================
-          MODAL: SET MANUAL BUDGET & ADD SEPARATE TRIPS
+          MODAL: SET MANUAL BUDGET & ADD SEPARATE TRIPS (COMPACT & RESPONSIVE)
           ========================================================================= */}
       {showSettingsModal && (
         <div
@@ -830,12 +842,13 @@ export function SoloTripPage() {
             position: 'fixed',
             inset: 0,
             backgroundColor: isLight ? 'rgba(15, 23, 42, 0.45)' : 'rgba(0, 0, 0, 0.8)',
-            backdropFilter: 'blur(10px)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 1000,
-            padding: '16px',
+            padding: '12px',
+            boxSizing: 'border-box',
           }}
         >
           <div
@@ -843,155 +856,311 @@ export function SoloTripPage() {
             style={{
               backgroundColor: isLight ? '#ffffff' : '#111417',
               border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.14)',
-              borderRadius: '24px',
-              padding: '26px',
-              maxWidth: '420px',
+              borderRadius: '20px',
+              padding: '16px 18px',
+              maxWidth: '340px',
               width: '100%',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+              maxHeight: '88vh',
+              overflowY: 'auto',
+              boxShadow: '0 20px 45px rgba(0,0,0,0.3)',
+              boxSizing: 'border-box',
             }}
           >
             {/* Modal Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Wallet size={20} color={currentAccent?.primary || '#f59e0b'} />
-                <h3 style={{ fontSize: '18px', fontWeight: 900, color: isLight ? '#0f172a' : '#ffffff', margin: 0 }}>
-                  Trip Budget & Settings
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                <Wallet size={16} color={currentAccent?.primary || '#f59e0b'} />
+                <h3 style={{ fontSize: '15px', fontWeight: 900, color: isLight ? '#0f172a' : '#ffffff', margin: 0 }}>
+                  Trip Settings
                 </h3>
               </div>
               <button
                 onClick={() => setShowSettingsModal(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: isLight ? '#64748b' : '#94a3b8' }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: isLight ? '#64748b' : '#94a3b8',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
               >
-                <X size={20} />
+                <X size={16} />
               </button>
             </div>
 
-            {/* SECTION 1: SET MANUAL BUDGET FOR ACTIVE TRIP */}
+            {/* Segmented Pill Tab Switcher */}
             <div
               style={{
-                backgroundColor: isLight ? '#f8fafc' : '#181b20',
-                borderRadius: '16px',
-                padding: '16px',
-                marginBottom: '20px',
+                display: 'flex',
+                backgroundColor: isLight ? '#f1f5f9' : '#181b20',
+                borderRadius: '10px',
+                padding: '3px',
+                marginBottom: '14px',
+                gap: '2px',
               }}
             >
-              <div style={{ fontSize: '11px', fontWeight: 900, textTransform: 'uppercase', color: currentAccent?.primary || '#f59e0b', marginBottom: '4px' }}>
-                Active Trip: {activeTrip.name}
-              </div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 800, color: isLight ? '#0f172a' : '#ffffff', marginBottom: '8px' }}>
-                Set Manual Trip Budget (₹)
-              </label>
-
-              <form onSubmit={handleSaveManualBudget} style={{ display: 'flex', gap: '8px' }}>
-                <input
-                  type="number"
-                  step="any"
-                  required
-                  value={manualBudgetValue}
-                  onChange={(e) => setManualBudgetValue(e.target.value)}
-                  placeholder="e.g. 25000"
-                  style={{
-                    flex: 1,
-                    padding: '10px 14px',
-                    borderRadius: '12px',
-                    border: isLight ? '1.5px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.16)',
-                    backgroundColor: isLight ? '#ffffff' : '#0c0f12',
-                    color: isLight ? '#0f172a' : '#ffffff',
-                    fontSize: '16px',
-                    fontWeight: 900,
-                    outline: 'none',
-                  }}
-                />
-                <button
-                  type="submit"
-                  style={{
-                    padding: '10px 18px',
-                    borderRadius: '12px',
-                    backgroundColor: currentAccent?.primary || '#f59e0b',
-                    color: accent === 'amber' ? '#000000' : '#ffffff',
-                    fontSize: '13px',
-                    fontWeight: 900,
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Save
-                </button>
-              </form>
+              <button
+                type="button"
+                onClick={() => setSettingsModalTab('budget')}
+                style={{
+                  flex: 1,
+                  padding: '6px 8px',
+                  fontSize: '11.5px',
+                  fontWeight: 800,
+                  borderRadius: '8px',
+                  border: 'none',
+                  backgroundColor: settingsModalTab === 'budget' ? (isLight ? '#ffffff' : '#262d37') : 'transparent',
+                  color: settingsModalTab === 'budget' ? (isLight ? '#0f172a' : '#ffffff') : (isLight ? '#64748b' : '#94a3b8'),
+                  boxShadow: settingsModalTab === 'budget' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                🎯 Set Budget
+              </button>
+              <button
+                type="button"
+                onClick={() => setSettingsModalTab('new')}
+                style={{
+                  flex: 1,
+                  padding: '6px 8px',
+                  fontSize: '11.5px',
+                  fontWeight: 800,
+                  borderRadius: '8px',
+                  border: 'none',
+                  backgroundColor: settingsModalTab === 'new' ? (isLight ? '#ffffff' : '#262d37') : 'transparent',
+                  color: settingsModalTab === 'new' ? (isLight ? '#0f172a' : '#ffffff') : (isLight ? '#64748b' : '#94a3b8'),
+                  boxShadow: settingsModalTab === 'new' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                ➕ New Trip
+              </button>
             </div>
 
-            {/* SECTION 2: ADD A SEPARATE NEW TRIP ("TRIP KE LIYIE ALAG") */}
-            <div style={{ borderTop: isLight ? '1px solid #f1f5f9' : '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
-                <Briefcase size={16} color={isLight ? '#64748b' : '#94a3b8'} />
-                <span style={{ fontSize: '13px', fontWeight: 900, color: isLight ? '#0f172a' : '#ffffff' }}>
-                  Create Another Separate Trip
-                </span>
-              </div>
-
-              <form onSubmit={handleCreateNewTrip} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Trip Name (e.g. Goa Vacation, Manali Ride)"
-                    value={newTripTitle}
-                    onChange={(e) => setNewTripTitle(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '10px 14px',
-                      borderRadius: '12px',
-                      border: isLight ? '1.5px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.16)',
-                      backgroundColor: isLight ? '#f8fafc' : '#181b20',
-                      color: isLight ? '#0f172a' : '#ffffff',
-                      fontSize: '13px',
-                      fontWeight: 700,
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                    }}
-                  />
+            {/* TAB 1: SET MANUAL BUDGET */}
+            {settingsModalTab === 'budget' ? (
+              <div>
+                {/* Active Trip Info Strip */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    backgroundColor: isLight ? '#f8fafc' : '#16191f',
+                    borderRadius: '12px',
+                    padding: '8px 12px',
+                    marginBottom: '12px',
+                    border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.08)',
+                  }}
+                >
+                  <div style={{ minWidth: 0, marginRight: '8px' }}>
+                    <div style={{ fontSize: '10px', fontWeight: 800, color: isLight ? '#94a3b8' : '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Current Trip
+                    </div>
+                    <div style={{ fontSize: '12.5px', fontWeight: 900, color: isLight ? '#0f172a' : '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      🎒 {activeTrip.name}
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <div style={{ fontSize: '10px', fontWeight: 800, color: isLight ? '#94a3b8' : '#64748b', textTransform: 'uppercase' }}>
+                      Current
+                    </div>
+                    <div style={{ fontSize: '12.5px', fontWeight: 900, color: currentAccent?.primary || '#f59e0b' }}>
+                      ₹{budget.toLocaleString('en-IN')}
+                    </div>
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="number"
-                    step="any"
-                    required
-                    placeholder="Initial Budget ₹"
-                    value={newTripBudget}
-                    onChange={(e) => setNewTripBudget(e.target.value)}
-                    style={{
-                      flex: 1,
-                      padding: '10px 14px',
-                      borderRadius: '12px',
-                      border: isLight ? '1.5px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.16)',
-                      backgroundColor: isLight ? '#f8fafc' : '#181b20',
-                      color: isLight ? '#0f172a' : '#ffffff',
-                      fontSize: '13px',
-                      fontWeight: 800,
-                      outline: 'none',
-                    }}
-                  />
+                <form onSubmit={handleSaveManualBudget} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: isLight ? '#475569' : '#94a3b8', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Set Manual Budget Amount
+                    </label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', fontSize: '14px', fontWeight: 900, color: isLight ? '#64748b' : '#94a3b8' }}>
+                        ₹
+                      </span>
+                      <input
+                        type="number"
+                        step="any"
+                        required
+                        value={manualBudgetValue}
+                        onChange={(e) => setManualBudgetValue(e.target.value)}
+                        placeholder="e.g. 25000"
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '8px 12px 8px 26px',
+                          borderRadius: '10px',
+                          border: isLight ? '1.5px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.16)',
+                          backgroundColor: isLight ? '#ffffff' : '#0c0f12',
+                          color: isLight ? '#0f172a' : '#ffffff',
+                          fontSize: '14px',
+                          fontWeight: 900,
+                          outline: 'none',
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quick Preset Amount Buttons */}
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    {[5000, 10000, 25000, 50000].map((amt) => (
+                      <button
+                        key={amt}
+                        type="button"
+                        onClick={() => setManualBudgetValue(amt.toString())}
+                        style={{
+                          flex: 1,
+                          padding: '5px 0',
+                          borderRadius: '8px',
+                          border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.1)',
+                          backgroundColor: isLight ? '#f8fafc' : '#181b20',
+                          color: isLight ? '#475569' : '#cbd5e1',
+                          fontSize: '10.5px',
+                          fontWeight: 800,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        ₹{amt >= 1000 ? `${amt / 1000}k` : amt}
+                      </button>
+                    ))}
+                  </div>
 
                   <button
                     type="submit"
                     style={{
-                      padding: '10px 16px',
-                      borderRadius: '12px',
-                      backgroundColor: isLight ? '#000000' : '#ffffff',
-                      color: isLight ? '#ffffff' : '#000000',
-                      fontSize: '13px',
+                      width: '100%',
+                      padding: '9px',
+                      borderRadius: '10px',
+                      backgroundColor: currentAccent?.primary || '#f59e0b',
+                      color: accent === 'amber' ? '#000000' : '#ffffff',
+                      fontSize: '12px',
                       fontWeight: 900,
                       border: 'none',
                       cursor: 'pointer',
-                      whiteSpace: 'nowrap',
+                      marginTop: '2px',
                     }}
                   >
-                    + Create Trip
+                    Save Budget
                   </button>
+                </form>
+
+                <div
+                  onClick={() => setSettingsModalTab('new')}
+                  style={{
+                    textAlign: 'center',
+                    marginTop: '10px',
+                    fontSize: '11px',
+                    color: currentAccent?.primary || '#f59e0b',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                  }}
+                >
+                  + Want a separate new trip? Tap here →
                 </div>
-              </form>
-            </div>
+              </div>
+            ) : (
+              /* TAB 2: CREATE SEPARATE NEW TRIP */
+              <div>
+                <form onSubmit={handleCreateNewTrip} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: isLight ? '#475569' : '#94a3b8', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Trip Name
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Goa, Ladakh, Manali"
+                      value={newTripTitle}
+                      onChange={(e) => setNewTripTitle(e.target.value)}
+                      style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        padding: '8px 12px',
+                        borderRadius: '10px',
+                        border: isLight ? '1.5px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.16)',
+                        backgroundColor: isLight ? '#ffffff' : '#0c0f12',
+                        color: isLight ? '#0f172a' : '#ffffff',
+                        fontSize: '12.5px',
+                        fontWeight: 700,
+                        outline: 'none',
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: isLight ? '#475569' : '#94a3b8', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Initial Budget (₹)
+                    </label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', fontSize: '13px', fontWeight: 900, color: isLight ? '#64748b' : '#94a3b8' }}>
+                        ₹
+                      </span>
+                      <input
+                        type="number"
+                        step="any"
+                        required
+                        placeholder="e.g. 15000"
+                        value={newTripBudget}
+                        onChange={(e) => setNewTripBudget(e.target.value)}
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '8px 12px 8px 24px',
+                          borderRadius: '10px',
+                          border: isLight ? '1.5px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.16)',
+                          backgroundColor: isLight ? '#ffffff' : '#0c0f12',
+                          color: isLight ? '#0f172a' : '#ffffff',
+                          fontSize: '13px',
+                          fontWeight: 800,
+                          outline: 'none',
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      width: '100%',
+                      padding: '9px',
+                      borderRadius: '10px',
+                      backgroundColor: isLight ? '#000000' : '#ffffff',
+                      color: isLight ? '#ffffff' : '#000000',
+                      fontSize: '12px',
+                      fontWeight: 900,
+                      border: 'none',
+                      cursor: 'pointer',
+                      marginTop: '4px',
+                    }}
+                  >
+                    + Create Separate Trip
+                  </button>
+                </form>
+
+                <div
+                  onClick={() => setSettingsModalTab('budget')}
+                  style={{
+                    textAlign: 'center',
+                    marginTop: '10px',
+                    fontSize: '11px',
+                    color: isLight ? '#64748b' : '#94a3b8',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                  }}
+                >
+                  ← Back to active trip budget
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
